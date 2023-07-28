@@ -1,8 +1,18 @@
 #pragma once
 
+#include "AppState.h"
+
+#include <chrono>
+
 class App
 {
 	bool running = false;
+
+	AppState* state = nullptr;
+
+
+	std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
+
 public:
 	App();
 	~App();
