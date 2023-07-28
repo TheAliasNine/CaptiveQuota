@@ -20,6 +20,7 @@ void App::Init()
 	lastTime = std::chrono::steady_clock::now();
 	running = true;
 	InitWindow(WINDOWX, WINDOWY, "Captive Quota");
+	//InitAudioDevice();
 	SetExitKey(0);
 
 	state = new AppIntro();
@@ -61,6 +62,8 @@ void App::Draw()
 
 void App::Close()
 {
+	CloseWindow();
+	//CloseAudioDevice();
 	running = false;
 
 	if (state != nullptr)

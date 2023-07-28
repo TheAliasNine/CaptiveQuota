@@ -9,6 +9,8 @@ class AppIntro : public AppState
 	const float lengthTime = 1.5f;
 	float timer;
 
+	//Wave wave;
+	//Sound sound;
 public:
 
 	AppIntro();
