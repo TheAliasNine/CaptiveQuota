@@ -1,0 +1,14 @@
+
+# Tool generated
+.vs/
+*.filters
+*.user
+*.rej
+
+# Build artifacts
+x64/
+!Raylib/bin/x64
+Win32/
+!Raylib/bin/Win32
+bin/
+!Raylib/bin/
