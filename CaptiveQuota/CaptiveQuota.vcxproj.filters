@@ -8,8 +8,8 @@
     <ClCompile Include="AppIntro.cpp">
       <Filter>App</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>MainMenu</Filter>
+    <ClCompile Include="Vector2.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -22,8 +22,8 @@
     <ClInclude Include="AppIntro.h">
       <Filter>App</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>MainMenu</Filter>
+    <ClInclude Include="Vector2.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +32,9 @@
     </Filter>
     <Filter Include="MainMenu">
       <UniqueIdentifier>{df3c1d84-f2a2-4bec-9516-440ec9973cd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{ef16ca44-2b68-456a-9daa-9a499b97ec7b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
