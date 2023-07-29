@@ -6,11 +6,13 @@
 
 class AppIntro : public AppState
 {
-	const float lengthTime = 1.5f;
+	const float lengthTime = 2.6f;
+	const float soundDelay = 0.8f;
+	bool soundPlayed = false;
 	float timer;
 
-	//Wave wave;
-	//Sound sound;
+	Wave wave;
+	Sound sound;
 public:
 
 	AppIntro();

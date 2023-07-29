@@ -4,8 +4,8 @@
 AppIntro::AppIntro()
 {
 	timer = lengthTime;
-	//wave = LoadWave("\Assets\Audio\load.wav");
-	//sound = LoadSoundFromWave(wave);
+	wave = LoadWave("Assets\\Sound\\AppIntro.wav");
+	sound = LoadSoundFromWave(wave);
 }
 
 void AppIntro::Draw()
@@ -20,15 +20,16 @@ void AppIntro::Draw()
 
 void AppIntro::Update(float deltaTime)
 {
-	if (timer == lengthTime)
+	if (!soundPlayed && timer < lengthTime - soundDelay)
 	{
-		//PlaySound(sound);
+		soundPlayed = true;
+		PlaySound(sound);
 	}
 	timer -= deltaTime;
 	if (timer <= 0)
 	{
-		//UnloadWave(wave);
-		//UnloadSound(sound);
+		UnloadWave(wave);
+		UnloadSound(sound);
 		closed = true;
 	}
 }
