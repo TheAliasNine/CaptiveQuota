@@ -28,7 +28,7 @@ public:
 	Vector2 ClampMag(float max);
 
 	static Vector2 ClampVector(Vector2 value, Vector2 min, Vector2 max);
-	Vector2 ClampVector(Vector2 min, Vector2 max);
+	void ClampVector(Vector2 min, Vector2 max);
 
 
 	//operators

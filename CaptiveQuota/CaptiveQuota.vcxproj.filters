@@ -11,6 +11,9 @@
     <ClCompile Include="Vector2.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>InputManagement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -25,6 +28,9 @@
     <ClInclude Include="Vector2.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>InputManagement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="App">
@@ -35,6 +41,9 @@
     </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{ef16ca44-2b68-456a-9daa-9a499b97ec7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputManagement">
+      <UniqueIdentifier>{c605462e-1557-4102-ae6e-6962ce434b5f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
