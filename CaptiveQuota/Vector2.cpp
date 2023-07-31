@@ -27,11 +27,6 @@ float Vector2::Magnitude()
 	return sqrt(x * x + y * y);
 }
 
-float Vector2::MagSqrd()
-{
-	return x * x + y * y;
-}
-
 
 Vector2 Vector2::Normalized()
 {
@@ -99,9 +94,10 @@ Vector2 Vector2::ClampVector(Vector2 value, Vector2 min, Vector2 max)
 	{
 		value.y = max.y;
 	}
+	return value;
 }
 
-Vector2 Vector2::ClampVector(Vector2 min, Vector2 max)
+void Vector2::ClampVector(Vector2 min, Vector2 max)
 {
 	if (x < min.x)
 	{
