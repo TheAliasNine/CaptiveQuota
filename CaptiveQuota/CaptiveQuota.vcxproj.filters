@@ -8,7 +8,7 @@
     <ClCompile Include="AppIntro.cpp">
       <Filter>App</Filter>
     </ClCompile>
-    <ClCompile Include="Vector2.cpp">
+    <ClCompile Include="v2.cpp">
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
@@ -19,6 +19,9 @@
     </ClCompile>
     <ClCompile Include="Circle.cpp">
       <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -31,7 +34,7 @@
     <ClInclude Include="AppIntro.h">
       <Filter>App</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2.h">
+    <ClInclude Include="v2.h">
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
@@ -51,6 +54,15 @@
     </ClInclude>
     <ClInclude Include="CollisionInfo.h">
       <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIInteractable.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
