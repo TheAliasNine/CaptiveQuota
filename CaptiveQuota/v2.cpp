@@ -1,20 +1,20 @@
-#include "Vector2.h"
+#include "v2.h"
 
 #include <math.h>
 
-Vector2::Vector2()
+v2::v2()
 {
 	x = 0;
 	y = 0;
 }
 
-Vector2::Vector2(float allVals)
+v2::v2(float allVals)
 {
 	x = allVals;
 	y = allVals;
 }
 
-Vector2::Vector2(float x, float y)
+v2::v2(float x, float y)
 {
 	this->x = x;
 	this->y = y;
@@ -22,61 +22,61 @@ Vector2::Vector2(float x, float y)
 
 
 
-float Vector2::Magnitude()
+float v2::Magnitude()
 {
 	return sqrt(x * x + y * y);
 }
 
 
-Vector2 Vector2::Normalized()
+v2 v2::Normalized()
 {
 	float mag = Magnitude();
-	return Vector2(x / mag, y / mag);
+	return v2(x / mag, y / mag);
 }
 
 
-float Vector2::Dot(Vector2 lhs, Vector2 rhs)
+float v2::Dot(v2 lhs, v2 rhs)
 {
 	return lhs.x * rhs.x + lhs.y * rhs.y;
 }
 
-float Vector2::Dot(Vector2 other)
+float v2::Dot(v2 other)
 {
 	return x * other.x + y * other.y;
 }
 
 
-float Vector2::CrossZ(Vector2 lhs, Vector2 rhs)
+float v2::CrossZ(v2 lhs, v2 rhs)
 {
 	return lhs.x * rhs.y - lhs.y * rhs.x;
 }
 
-float Vector2::CrossZ(Vector2 other)
+float v2::CrossZ(v2 other)
 {
 	return x * other.y - y * other.x;
 }
 
 
-Vector2 Vector2::ClampMag(Vector2 v2, float max)
+v2 v2::ClampMag(v2 v, float max)
 {
-	float magSqrd = v2.MagSqrd();
-	if (max * max >= magSqrd) return v2;
+	float magSqrd = v.MagSqrd();
+	if (max * max >= magSqrd) return v;
 
 	float mag = sqrt(magSqrd);
-	return Vector2(v2.x / mag * max, v2.y / mag * max);
+	return v2(v.x / mag * max, v.y / mag * max);
 }
 
-Vector2 Vector2::ClampMag(float max)
+v2 v2::ClampMag(float max)
 {
 	float magSqrd = MagSqrd();
-	if (max * max >= magSqrd) return Vector2(x, y);
+	if (max * max >= magSqrd) return v2(x, y);
 
 	float mag = sqrt(magSqrd);
-	return Vector2(x / mag * max, y / mag * max);
+	return v2(x / mag * max, y / mag * max);
 }
 
 
-Vector2 Vector2::ClampVector(Vector2 value, Vector2 min, Vector2 max)
+v2 v2::ClampVector(v2 value, v2 min, v2 max)
 {
 	if (value.x < min.x)
 	{
@@ -97,7 +97,7 @@ Vector2 Vector2::ClampVector(Vector2 value, Vector2 min, Vector2 max)
 	return value;
 }
 
-void Vector2::ClampVector(Vector2 min, Vector2 max)
+void v2::ClampVector(v2 min, v2 max)
 {
 	if (x < min.x)
 	{
