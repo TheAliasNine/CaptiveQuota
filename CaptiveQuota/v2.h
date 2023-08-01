@@ -28,7 +28,9 @@ public:
 	v2 ClampMag(float max);
 
 	static v2 ClampVector(v2 value, v2 min, v2 max);
-	void ClampVector(v2 min, v2 max);
+	v2 ClampVector(v2 min, v2 max);
+
+	v2 RotateVector(float radians);
 
 
 	//operators
