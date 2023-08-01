@@ -179,15 +179,25 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AABB.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="AppIntro.cpp" />
+    <ClCompile Include="Circle.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AABB.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="AppIntro.h" />
     <ClInclude Include="AppState.h" />
-    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="Circle.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="CollisionInfo.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
