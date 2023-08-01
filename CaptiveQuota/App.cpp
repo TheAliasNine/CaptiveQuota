@@ -34,7 +34,6 @@ void App::Update()
 		running = false;
 		return;
 	}
-
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 	std::chrono::duration<float> deltaTime = now - lastTime;
 	lastTime = now;

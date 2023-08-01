@@ -1,5 +1,6 @@
 #include "AppIntro.h"
 
+#include "MainMenu.h"
 
 AppIntro::AppIntro()
 {
@@ -31,5 +32,6 @@ void AppIntro::Update(float deltaTime)
 		UnloadWave(wave);
 		UnloadSound(sound);
 		closed = true;
+		nextState = new MainMenu();
 	}
 }
