@@ -4,6 +4,7 @@
 
 
 #include "AppIntro.h"
+#include "Game.h"
 
 App::App()
 {
@@ -23,7 +24,7 @@ void App::Init()
 	InitAudioDevice();
 	SetExitKey(0);
 
-	state = new AppIntro();
+	state = new Game();
 }
 
 

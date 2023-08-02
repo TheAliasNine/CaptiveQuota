@@ -8,9 +8,6 @@
     <ClCompile Include="AppIntro.cpp">
       <Filter>App</Filter>
     </ClCompile>
-    <ClCompile Include="Vector2.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>InputManagement</Filter>
     </ClCompile>
@@ -19,6 +16,18 @@
     </ClCompile>
     <ClCompile Include="Circle.cpp">
       <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="v2.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>MainMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="MapMaker.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -30,9 +39,6 @@
     </ClInclude>
     <ClInclude Include="AppIntro.h">
       <Filter>App</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>InputManagement</Filter>
@@ -51,6 +57,27 @@
     </ClInclude>
     <ClInclude Include="CollisionInfo.h">
       <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="v2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>MainMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="MapMaker.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObject.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="intV2.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +98,9 @@
     </Filter>
     <Filter Include="Collision">
       <UniqueIdentifier>{c0bb1a8c-6d41-49ee-b6f4-17425bab5109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{dcd9dc11-29cd-47c3-8528-310fa944ecfc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

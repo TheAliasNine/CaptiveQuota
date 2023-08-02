@@ -183,9 +183,11 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="AppIntro.cpp" />
     <ClCompile Include="Circle.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="MapMaker.cpp" />
     <ClCompile Include="v2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -197,8 +199,13 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionInfo.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="intV2.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MapMaker.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="SceneObject.h" />
     <ClInclude Include="v2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
