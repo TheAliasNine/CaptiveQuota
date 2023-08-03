@@ -23,6 +23,7 @@ class MapMaker
 	static const int majorMaxDistance = 60;
 	static const int majorMinDistance = 40;
 	static const int minLeverRoomDist = 15;
+	static const int minKeyRoomDist = 15;
 
 //Setup------------------------------------------------------
 	unsigned int seed = 0;

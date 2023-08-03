@@ -15,6 +15,10 @@ public:
 		//Basic Navigation
 		Confirm,
 		Back,
+		Up,
+		Down,
+		Left,
+		Right,
 		OpenMenu,
 
 		KEYBINDLENGTH,

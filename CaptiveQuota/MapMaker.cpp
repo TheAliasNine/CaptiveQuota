@@ -1,14 +1,16 @@
 #include "MapMaker.h"
 
+#include "CorridorNode.h"
 #include "v2.h"
 
-
+#include <list>
 #include <random>
 
 MapMaker::Tile* MapMaker::MakeMap()
 {
 	std::srand(seed);
 	MajorRooms();
+
 	LeverRooms();
 	KeyRooms();
 	GenerateCorridors();
@@ -167,12 +169,12 @@ void MapMaker::KeyRooms()
 		//check overlap with other key rooms
 		for (int j = 0; j < i; j++)
 		{
-			if (std::abs(keyRoomPos[i].x - keyRoomPos[j].x) <= keyRoomSize + keyRoomSize)
+			if (std::abs(keyRoomPos[i].x - keyRoomPos[j].x) <= minKeyRoomDist)
 			{
 				overlapped = true;
 				break;
 			}
-			if (std::abs(keyRoomPos[i].x - keyRoomPos[j].x) <= keyRoomSize + keyRoomSize)
+			if (std::abs(keyRoomPos[i].x - keyRoomPos[j].x) <= minKeyRoomDist)
 			{
 				overlapped = true;
 				break;
@@ -185,8 +187,38 @@ void MapMaker::KeyRooms()
 
 void MapMaker::GenerateCorridors()
 {
+	int scale = 2;
+	intV2 scaledSize = intV2{ size.x / scale, size.y / scale };
 	
+	Tile* scaledMap = new Tile[scaledSize.x * scaledSize.y];
 
+	for (size_t i = 0; i < scaledSize.x * scaledSize.y; i++)
+	{
+		scaledMap[i] = Tile::blank;
+	}
+	//generate corridors
+
+	std::list<CorridorNode> openList;
+	std::list<CorridorNode> closedList;
+
+
+
+
+
+
+	//translate to normal size
+	for (int y = 0; y < scaledSize.y; y++)
+	{
+		for (int x = 0; x < scaledSize.x; x++)
+		{
+			for (int i = 0; i < scale; i++)
+			{
+				map[(x + y * size.x) * scale + i] = scaledMap[x + y * size.x];
+			}
+		}
+	}
+
+	delete[] scaledMap;
 }
 
 void MapMaker::AddRooms()
