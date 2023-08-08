@@ -38,6 +38,10 @@ void InputManager::KeyBinds::Load()
 void InputManager::KeyBinds::LoadDefaults()
 {
 	binds[Confirm].key = MOUSE_LEFT_BUTTON;
+	binds[Up].key = KEY_W;
+	binds[Down].key = KEY_S;
+	binds[Left].key = KEY_A;
+	binds[Right].key = KEY_D;
 }
 
 bool InputManager::KeyBinds::LoadByFile()

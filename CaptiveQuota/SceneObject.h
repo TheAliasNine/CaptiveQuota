@@ -1,5 +1,7 @@
 #pragma once
 
+#include "v2.h"
+
 class SceneObject
 {
 public:

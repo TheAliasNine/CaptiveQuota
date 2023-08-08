@@ -60,6 +60,6 @@ public:
 	v2 operator+= (v2 v) { return v2(x + v.x, y + v.y); }
 	v2 operator- (v2 v) { return v2(x - v.x, y - v.y); }
 	v2 operator-= (v2 v) { return v2(x - v.x, y - v.y); }
-	bool operator== (v2 v) { return x == x && y == y; }
-	bool operator!= (v2 v) { return x != x || y != y; }
+	bool operator== (v2 v) { return x == v.x && y == v.y; }
+	bool operator!= (v2 v) { return x != v.x || y != v.y; }
 };

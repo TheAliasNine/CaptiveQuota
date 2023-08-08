@@ -134,7 +134,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WINDOWX=800;WINDOWY=450;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWX=1200;WINDOWY=675;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Raylib\include;</AdditionalIncludeDirectories>
     </ClCompile>
