@@ -1,19 +1,23 @@
-#include "MapMaker.h"
+#include "Map.h"
 
+
+#include "CorridorNode.h"
 #include "v2.h"
 
 #include <list>
 #include <random>
+
 #ifdef _DEBUG
 #include <chrono>
 #include <iostream>
 #endif // _DEBUG
 
-MapMaker::Tile* MapMaker::MakeMap()
+Map* Map::MapMaker::MakeMap()
 {
 #ifdef  _DEBUG
 	auto before = std::chrono::steady_clock::now();
 #endif //  _DEBUG
+
 
 	std::srand(seed);
 	MajorRooms();
@@ -34,7 +38,7 @@ MapMaker::Tile* MapMaker::MakeMap()
 	return map;
 }
 
-void MapMaker::MajorRooms()
+void Map::MapMaker::MajorRooms()
 {
 	//Calculate the starting location for the 3 major locations
 	v2 a = v2();
@@ -79,31 +83,31 @@ void MapMaker::MajorRooms()
 
 
 	//figure out the max size
-	size.x = majorRooms[0].x;
-	size.y = majorRooms[0].y;
+	map->m_size.x = majorRooms[0].x;
+	map->m_size.y = majorRooms[0].y;
 	for (int i = 1; i < majorRoomCount; i++)
 	{
-		if (size.x < majorRooms[i].x)
-			size.x = majorRooms[i].x;
-		if (size.y < majorRooms[i].y)
-			size.y = majorRooms[i].y;
+		if (map->m_size.x < majorRooms[i].x)
+			map->m_size.x = majorRooms[i].x;
+		if (map->m_size.y < majorRooms[i].y)
+			map->m_size.y = majorRooms[i].y;
 	}
 	//accomodate for room size
-	size.x += majorRoomSize + 1;
- 	size.y += majorRoomSize + 1;
+	map->m_size.x += majorRoomSize + 1;
+ 	map->m_size.y += majorRoomSize + 1;
 	//add one to include both 0 and highest val
-	size.x++;
-	size.y++;
+	map->m_size.x++;
+	map->m_size.y++;
 }
 
 
-void MapMaker::LeverRooms()
+void Map::MapMaker::LeverRooms()
 {
 	//assign random positions not in the major rooms
 	for (int i = 0; i < leverRoomCount; i++)
 	{
-		leverRoomPos[i].x = (rand() % (size.x - 2 - leverRoomSize * 2)) + leverRoomSize + 1;
-		leverRoomPos[i].y = (rand() % (size.y - 2 - leverRoomSize * 2)) + leverRoomSize + 1;
+		leverRoomPos[i].x = (rand() % (map->m_size.x - 2 - leverRoomSize * 2)) + leverRoomSize + 1;
+		leverRoomPos[i].y = (rand() % (map->m_size.y - 2 - leverRoomSize * 2)) + leverRoomSize + 1;
 
 		bool overlapped = false;
 		for (int j = 0; j < majorRoomCount; j++)
@@ -139,14 +143,14 @@ void MapMaker::LeverRooms()
 	}
 }
 
-void MapMaker::KeyRooms()
+void Map::MapMaker::KeyRooms()
 {
 	//assign random positions
 	//assign random positions not in the major rooms
 	for (int i = 0; i < keyRoomCount; i++)
 	{
-		keyRoomPos[i].x = (rand() % (size.x - 2 - keyRoomSize * 2)) + keyRoomSize + 1;
-		keyRoomPos[i].y = (rand() % (size.y - 2 - keyRoomSize * 2)) + keyRoomSize + 1;
+		keyRoomPos[i].x = (rand() % (map->m_size.x - 2 - keyRoomSize * 2)) + keyRoomSize + 1;
+		keyRoomPos[i].y = (rand() % (map->m_size.y - 2 - keyRoomSize * 2)) + keyRoomSize + 1;
 
 		bool overlapped = false;
 		for (int j = 0; j < majorRoomCount; j++)
@@ -196,13 +200,13 @@ void MapMaker::KeyRooms()
 	}
 }
 
-void MapMaker::GenerateCorridors()
+void Map::MapMaker::GenerateCorridors()
 {
-	CorridorMaker corridorMaker = CorridorMaker(size);
-	map = corridorMaker.CreateCorridorMap();
+	CorridorMaker corridorMaker = CorridorMaker(map, map->m_size);
+	corridorMaker.CreateCorridorMap();
 }
 
-void MapMaker::AddRooms()
+void Map::MapMaker::AddRooms()
 {
 	int totalMajorRoomSize = 2 * majorRoomSize + 1;
 	for (int i = 0; i < totalMajorRoomSize * totalMajorRoomSize; i++)
@@ -213,12 +217,27 @@ void MapMaker::AddRooms()
 		x -= majorRoomSize;
 		y -= majorRoomSize;
 		
-		map[x + majorRooms[0].x + (y + majorRooms[0].y) * size.x] = Tile::exit;
+		map->m_tiles[x + majorRooms[0].x + (y + majorRooms[0].y) * map->m_size.x] = Map::Tile::path;
 
-		map[x + majorRooms[1].x + (y + majorRooms[1].y) * size.x] = Tile::cell;
+		map->m_tiles[x + majorRooms[1].x + (y + majorRooms[1].y) * map->m_size.x] = Map::Tile::vault;
 
-		map[x + majorRooms[2].x + (y + majorRooms[2].y) * size.x] = Tile::vault;
+		map->m_tiles[x + majorRooms[2].x + (y + majorRooms[2].y) * map->m_size.x] = Map::Tile::cell; // the cell entirely is covered with different flooring
 	}
+
+	//Create Exit -------------------------------------------------------------------------
+	intV2 direction = intV2();
+	intV2 centre = intV2{ (int)round((map->m_size.x - 1) / 2), (int)round((map->m_size.y - 1) / 2) };
+	if (abs(centre.x - majorRooms[0].x) > abs(centre.y - majorRooms[0].y))
+	{
+		direction.x = centre.x - majorRooms[0].x > 0 ? -1 : 1;
+	}
+	else
+	{
+		direction.y = centre.y - majorRooms[0].y > 0 ? -1 : 1;
+	}
+	map->m_tiles[majorRooms[0].x + (direction.x * (majorRoomSize + 1)) + (majorRooms->y + (direction.y * (majorRoomSize + 1))) * map->m_size.x] = Map::Tile::exit;
+
+	//Create vault Portal ----------------------------------------------------------------
 
 	int totalKeyRoomSize = 2 * keyRoomSize + 1;
 	for (int i = 0; i < totalKeyRoomSize * totalKeyRoomSize; i++)
@@ -231,7 +250,7 @@ void MapMaker::AddRooms()
 
 		for (int room = 0; room < keyRoomCount; room++)
 		{
-			map[x + keyRoomPos[room].x + (y + keyRoomPos[room].y) * size.x] = Tile::key;
+			map->m_tiles[x + keyRoomPos[room].x + (y + keyRoomPos[room].y) * map->m_size.x] = Map::Tile::key;
 		}
 	}
 
@@ -246,106 +265,84 @@ void MapMaker::AddRooms()
 
 		for (int room = 0; room < leverRoomCount; room++)
 		{
-			map[x + leverRoomPos[room].x + (y + leverRoomPos[room].y) * size.x] = Tile::lever;
+			map->m_tiles[x + leverRoomPos[room].x + (y + leverRoomPos[room].y) * map->m_size.x] = Map::Tile::lever;
 		}
 	}
 }
 
-void MapMaker::AddWalls()
+void Map::MapMaker::AddWalls()
 {
 	//for every cell except the borders - saves checks for every cell
-	for (int y = 1; y < size.y - 1; y++)
+	for (int y = 1; y < map->m_size.y - 1; y++)
 	{
-		for (int x = 1; x < size.x - 1; x++)
+		for (int x = 1; x < map->m_size.x - 1; x++)
 		{
 			if (!IsWall(intV2{ x, y })) continue;
-			map[x + y * size.x] = Tile::wall;
+			map->m_tiles[x + y * map->m_size.x] = Map::Tile::wall;
 		}
 	}
 
 
-	//check corners
-	for (int i = 0; i < 4; i++)
-	{
-		int index = 0;
-		int checkIndex = 0;
-		switch (i)
-		{
-		case 0:
-			checkIndex += 1 + size.x;
-			break;
-		case 1:
-			index = size.x - 1;
-			checkIndex += -1 + size.x;
-			break;
-		case 2:
-			index = size.x * (size.y - 1);
-			checkIndex += 1 - size.x;
-			break;
-		case 3:
-			index = size.x * size.y - 1;
-			checkIndex += -1 - size.x;
-			break;
-		}
-
-		if (map[checkIndex] != Tile::wall && map[checkIndex] != Tile::blank)
-			map[index] = Tile::wall;
-
-	}
-
+	
 	//entire side excluding corners
-	for (int x = 1; x < size.x - 1; x++)
+	for (int x = 1; x < map->m_size.x - 1; x++)
 	{
-		if (map[x + size.x] != Tile::blank && map[x + size.x] != Tile::wall)
+		if (map->m_tiles[x + map->m_size.x] != Map::Tile::null && map->m_tiles[x + map->m_size.x] != Map::Tile::wall)
 		{
-			map[x] = Tile::wall;
-			map[x + 1] = Tile::wall;
-			map[x - 1] = Tile::wall;
+			map->m_tiles[x] = Map::Tile::wall;
+			map->m_tiles[x + 1] = Map::Tile::wall;
+			map->m_tiles[x - 1] = Map::Tile::wall;
 
 		}
-		if (map[x + size.x * (size.y - 2)] != Tile::blank && map[x + size.x * (size.y - 2)] != Tile::wall)
+		if (map->m_tiles[x + map->m_size.x * (map->m_size.y - 2)] != Map::Tile::null && map->m_tiles[x + map->m_size.x * (map->m_size.y - 2)] != Map::Tile::wall)
 		{
-			map[x + size.x * (size.y - 1)] = Tile::wall;
-			map[x + size.x * (size.y - 1) + 1] = Tile::wall;
-			map[x + size.x * (size.y - 1) - 1] = Tile::wall;
+			map->m_tiles[x + map->m_size.x * (map->m_size.y - 1)] = Map::Tile::wall;
+			map->m_tiles[x + map->m_size.x * (map->m_size.y - 1) + 1] = Map::Tile::wall;
+			map->m_tiles[x + map->m_size.x * (map->m_size.y - 1) - 1] = Map::Tile::wall;
 		}
 	}
-	for (int y = 1; y < size.y - 1; y++)
+	for (int y = 1; y < map->m_size.y - 1; y++)
 	{
-		if (map[y * size.x + 1] != Tile::blank && map[y * size.x + 1] != Tile::wall)
+		if (map->m_tiles[y * map->m_size.x + 1] != Map::Tile::null && map->m_tiles[y * map->m_size.x + 1] != Map::Tile::wall)
 		{
-			map[y * size.x] = Tile::wall;
-			map[y * size.x + size.x] = Tile::wall;
-			map[y * size.x - size.x] = Tile::wall;
+			if (map->m_tiles[y * map->m_size.x] == Map::Tile::null)
+				map->m_tiles[y * map->m_size.x] = Map::Tile::wall;
+			if (map->m_tiles[y * map->m_size.x + map->m_size.x] == Map::Tile::null)
+				map->m_tiles[y * map->m_size.x + map->m_size.x] = Map::Tile::wall;
+			if (map->m_tiles[y * map->m_size.x - map->m_size.x] == Map::Tile::null)
+				map->m_tiles[y * map->m_size.x - map->m_size.x] = Map::Tile::wall;
 
 		}
-		if (map[y * size.x + (size.x - 1) - 1] != Tile::blank && map[y * size.x + (size.x - 1) - 1] != Tile::wall)
+		if (map->m_tiles[y * map->m_size.x + (map->m_size.x - 1) - 1] != Map::Tile::null && map->m_tiles[y * map->m_size.x + (map->m_size.x - 1) - 1] != Map::Tile::wall)
 		{
-			map[y * size.x + (size.x - 1)] = Tile::wall;
-			map[(y + 1) * size.x + (size.x - 1)] = Tile::wall;
-			map[(y - 1) * size.x + (size.x - 1)] = Tile::wall;
+			if (map->m_tiles[y * map->m_size.x + (map->m_size.x - 1)] == Map::Tile::null)
+				map->m_tiles[y * map->m_size.x + (map->m_size.x - 1)] = Map::Tile::wall;
+			if (map->m_tiles[(y + 1) * map->m_size.x + (map->m_size.x - 1)] == Map::Tile::null)
+				map->m_tiles[(y + 1) * map->m_size.x + (map->m_size.x - 1)] = Map::Tile::wall;
+			if (map->m_tiles[(y - 1) * map->m_size.x + (map->m_size.x - 1)] == Map::Tile::null)
+				map->m_tiles[(y - 1) * map->m_size.x + (map->m_size.x - 1)] = Map::Tile::wall;
 		}
 	}
 
 }
 
-bool MapMaker::IsWall(intV2 pos)
+bool Map::MapMaker::IsWall(intV2 pos)
 {
-	if (map[pos.x + pos.y * size.x] != Tile::blank) return false;
+	if (map->m_tiles[pos.x + pos.y * map->m_size.x] != Map::Tile::null) return false;
 
 	for (int i = 0; i < 8; i++)
 	{
-		int index = pos.x + pos.y * size.x;
+		int index = pos.x + pos.y * map->m_size.x;
 		switch (i)
 		{
 		case 0:
-			index += -1 + -size.x;
+			index += -1 + -map->m_size.x;
 			break;
 		case 1:
-			index -= size.x;
+			index -= map->m_size.x;
 			break;
 		case 2:
-			index += 1 - size.x;
+			index += 1 - map->m_size.x;
 			break;
 		case 3:
 			index--;
@@ -354,33 +351,34 @@ bool MapMaker::IsWall(intV2 pos)
 			index++;
 			break;
 		case 5:
-			index += -1 + size.x;
+			index += -1 + map->m_size.x;
 			break;
 		case 6:
-			index += size.x;
+			index += map->m_size.x;
 			break;
 		case 7:
-			index += 1 + size.x;
+			index += 1 + map->m_size.x;
 			break;
 		}
-		if (map[index] != Tile::blank && map[index] != Tile::wall) return true;
+		if (map->m_tiles[index] != Map::Tile::null && map->m_tiles[index] != Map::Tile::wall) return true;
 	}
 	return false;
 }
 
 
-MapMaker::CorridorMaker::CorridorMaker(intV2 size)
+Map::MapMaker::CorridorMaker::CorridorMaker(Map* map, intV2 size)
 {
 	scaledSize = intV2{ (size.x - 1 - (spacing / 2) - scale) / (spacing + scale) + 1 , (size.y - 1 - (spacing / 2) - scale) / (spacing + scale) + 1 };
-	this->size = size;
-	map = new Tile[size.x * size.y];
+	map->m_size = size;
+	map->m_tiles = new Map::Tile[size.x * size.y];
 	for (int i = 0; i < size.x * size.y; i++)
 	{
-		map[i] = Tile::blank;
+		map->m_tiles[i] = Map::Tile::null;
 	}
+	this->map = map;
 }
 
-MapMaker::Tile* MapMaker::CorridorMaker::CreateCorridorMap()
+void Map::MapMaker::CorridorMaker::CreateCorridorMap()
 {
 	nodes = new CorridorNode[scaledSize.x * scaledSize.y];
 
@@ -393,10 +391,9 @@ MapMaker::Tile* MapMaker::CorridorMaker::CreateCorridorMap()
 	ConvertNodeToTiles(intV2(), true);
 	delete[] nodes;
 	nodes = nullptr;
-	return map;
 }
 
-void MapMaker::CorridorMaker::GenerateConnections()
+void Map::MapMaker::CorridorMaker::GenerateConnections()
 {
 	std::list<CorridorNode*> openList;
 	std::list<CorridorNode*> closedList;
@@ -479,7 +476,7 @@ void MapMaker::CorridorMaker::GenerateConnections()
 }
 
 
-void MapMaker::CorridorMaker::AddExtraConnections()
+void Map::MapMaker::CorridorMaker::AddExtraConnections()
 {
 	int makeConnectionsNo = std::rand() % (maxExtras - minExtras) + minExtras;
 
@@ -526,7 +523,7 @@ void MapMaker::CorridorMaker::AddExtraConnections()
 }
 
 
-void MapMaker::CorridorMaker::ConvertNodeToTiles(intV2 node, bool first)
+void Map::MapMaker::CorridorMaker::ConvertNodeToTiles(intV2 node, bool first)
 {
 	if (first)
 	{
@@ -539,8 +536,8 @@ void MapMaker::CorridorMaker::ConvertNodeToTiles(intV2 node, bool first)
 
 	converted[Index(node)] = true;
 
-	int offsetFromBorder = (spacing / 2) * (size.x + 1);
-	int nodePosition = (node.x + node.y * size.x) * (spacing + scale);
+	int offsetFromBorder = (spacing / 2) * (map->m_size.x + 1);
+	int nodePosition = (node.x + node.y * map->m_size.x) * (spacing + scale);
 
 	//create the node
 	for (int y = 0; y < scale; y++)
@@ -548,12 +545,12 @@ void MapMaker::CorridorMaker::ConvertNodeToTiles(intV2 node, bool first)
 		for (int x = 0; x < scale; x++)
 		{
 			//                                            filling out scale
-			int index = offsetFromBorder + nodePosition + (x + y * size.x);
-			if (index >= size.x * size.y)
+			int index = offsetFromBorder + nodePosition + (x + y * map->m_size.x);
+			if (index >= map->m_size.x * map->m_size.y)
 			{
 				int asda = 0;
 			}
-			map[index] = Tile::path;
+			map->m_tiles[index] = Map::Tile::path;
 		}
 	}
 
@@ -569,20 +566,20 @@ void MapMaker::CorridorMaker::ConvertNodeToTiles(intV2 node, bool first)
 		if (direction.x < 0)
 			offsetFromNode = -1;
 		else if (direction.y > 0)
-			offsetFromNode = size.x * scale;
+			offsetFromNode = map->m_size.x * scale;
 		else if (direction.y < 0)
-			offsetFromNode = -size.x;
+			offsetFromNode = -map->m_size.x;
 
 
 		for (int j = 0; j < spacing; j++)
 		{
-			int spacingFill = (direction.x + direction.y * size.x) * j;
+			int spacingFill = (direction.x + direction.y * map->m_size.x) * j;
 			for (int k = 0; k < scale; k++)
 			{
 				//                                                                                                fill scale
-				int index = offsetFromBorder + nodePosition + spacingFill + offsetFromNode +     k * abs(direction.y) + k * abs(direction.x) * size.x;
+				int index = offsetFromBorder + nodePosition + spacingFill + offsetFromNode +     k * abs(direction.y) + k * abs(direction.x) * map->m_size.x;
 				
-				map[index] = Tile::path;
+				map->m_tiles[index] = Map::Tile::path;
 			}
 		}
 

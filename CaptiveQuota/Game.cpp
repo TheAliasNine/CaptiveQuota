@@ -6,11 +6,8 @@
 
 Game::Game()
 {
-	seed = std::time(nullptr);
-
-	MapMaker mapMaker = MapMaker(seed);
-	map = mapMaker.MakeMap();
-	size = mapMaker.size;
+	map = Map();
+	map.CreateMap(std::time(nullptr));
 
 	InputManager::EnableBind(InputManager::Up);
 	InputManager::EnableBind(InputManager::Down);
@@ -50,35 +47,36 @@ void Game::Draw()
 
 void Game::DrawLevel()
 {
-	const int cellSize = 100;
+	const int cellSize = 5;
 
-	for (int y = 0; y < size.y; y++)
+	for (int y = 0; y < map.Size().y; y++)
 	{
-		for (int x = 0; x < size.x; x++)
+		for (int x = 0; x < map.Size().x; x++)
 		{
 			Color color = Color();
 			
-			switch (map[x + y * size.x])
+			switch (map[x + y * map.Size().x])
 			{
-			case MapMaker::Tile::path:
+			case Map::Tile::path:
 				color = Color{68, 67, 65, 255};
 				break;
-			case MapMaker::Tile::wall:
+			case Map::Tile::wall:
 				color = Color{42, 40, 39, 255};
 				break;
-			case MapMaker::Tile::exit:
-				color = Color{ 80, 57, 55, 255 };
+			case Map::Tile::exit:
+				color = RED;
+				//color = Color{ 80, 57, 55, 255 };
 				break;
-			case MapMaker::Tile::vault:
+			case Map::Tile::vault:
 				color = BLUE;
 				break;
-			case MapMaker::Tile::cell:
+			case Map::Tile::cell:
 				color = YELLOW;
 				break;
-			case MapMaker::Tile::lever:
+			case Map::Tile::lever:
 				color = GREEN;
 				break;
-			case MapMaker::Tile::key:
+			case Map::Tile::key:
 				color = ORANGE;
 				break;
 			}

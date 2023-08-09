@@ -32,6 +32,9 @@
     <ClCompile Include="Player.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -73,9 +76,6 @@
     <ClInclude Include="Player.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="MapMaker.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="SceneObject.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -83,6 +83,9 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="CorridorNode.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

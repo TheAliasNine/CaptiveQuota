@@ -1,15 +1,13 @@
 #pragma once
 
 #include "AppState.h"
-#include "MapMaker.h"
+#include "Map.h"
 
 #include "v2.h"
 
 class Game : public AppState
 {
-	MapMaker::Tile* map;
-	intV2 size = intV2();
-	unsigned int seed = 0;
+	Map map;
 	
 	v2 camPos = v2();
 
