@@ -106,14 +106,14 @@ void Map::MapMaker::LeverRooms()
 	//assign random positions not in the major rooms
 	for (int i = 0; i < leverRoomCount; i++)
 	{
-		leverRoomPos[i].x = (rand() % (map->m_size.x - 2 - leverRoomSize * 2)) + leverRoomSize + 1;
-		leverRoomPos[i].y = (rand() % (map->m_size.y - 2 - leverRoomSize * 2)) + leverRoomSize + 1;
+		map->m_levers[i].x = (rand() % (map->m_size.x - 2 - leverRoomSize * 2)) + leverRoomSize + 1;
+		map->m_levers[i].y = (rand() % (map->m_size.y - 2 - leverRoomSize * 2)) + leverRoomSize + 1;
 
 		bool overlapped = false;
 		for (int j = 0; j < majorRoomCount; j++)
 		{
-			if (std::abs(leverRoomPos[i].x - majorRooms[j].x) <= majorRoomSize + leverRoomSize &&
-				std::abs(leverRoomPos[i].y - majorRooms[j].y) <= majorRoomSize + leverRoomSize)
+			if (std::abs(map->m_levers[i].x - majorRooms[j].x) <= majorRoomSize + leverRoomSize &&
+				std::abs(map->m_levers[i].y - majorRooms[j].y) <= majorRoomSize + leverRoomSize)
 			{
 				overlapped = true;
 				break;
@@ -130,8 +130,8 @@ void Map::MapMaker::LeverRooms()
 		//check overlap with other lever rooms
 		for (int j = 0; j < i; j++)
 		{
-			if (std::abs(leverRoomPos[i].x - leverRoomPos[j].x) <= minLeverRoomDist && 
-				std::abs(leverRoomPos[i].y - leverRoomPos[j].y) <= minLeverRoomDist)
+			if (std::abs(map->m_levers[i].x - map->m_levers[j].x) <= minLeverRoomDist && 
+				std::abs(map->m_levers[i].y - map->m_levers[j].y) <= minLeverRoomDist)
 			{
 				overlapped = true;
 				break;
@@ -149,14 +149,15 @@ void Map::MapMaker::KeyRooms()
 	//assign random positions not in the major rooms
 	for (int i = 0; i < keyRoomCount; i++)
 	{
-		keyRoomPos[i].x = (rand() % (map->m_size.x - 2 - keyRoomSize * 2)) + keyRoomSize + 1;
-		keyRoomPos[i].y = (rand() % (map->m_size.y - 2 - keyRoomSize * 2)) + keyRoomSize + 1;
+		intV2 position = map->m_keyMolds[i];
+		position.x = (rand() % (map->m_size.x - 2 - keyRoomSize * 2)) + keyRoomSize + 1;
+		position.y = (rand() % (map->m_size.y - 2 - keyRoomSize * 2)) + keyRoomSize + 1;
 
 		bool overlapped = false;
 		for (int j = 0; j < majorRoomCount; j++)
 		{
-			if (std::abs(keyRoomPos[i].x - majorRooms[j].x) <= keyRoomSize + majorRoomSize &&
-				std::abs(keyRoomPos[i].y - majorRooms[j].y) <= keyRoomSize + majorRoomSize)
+			if (std::abs(position.x - majorRooms[j].x) <= keyRoomSize + majorRoomSize &&
+				std::abs(position.y - majorRooms[j].y) <= keyRoomSize + majorRoomSize)
 			{
 				overlapped = true;
 				break;
@@ -171,8 +172,8 @@ void Map::MapMaker::KeyRooms()
 
 		for (int j = 0; j < leverRoomCount; j++)
 		{
-			if (std::abs(keyRoomPos[i].x - leverRoomPos[j].x) <= keyRoomSize + leverRoomSize && 
-				std::abs(keyRoomPos[i].y - leverRoomPos[j].y) <= keyRoomSize + leverRoomSize)
+			if (std::abs(position.x - map->m_levers[j].x) <= keyRoomSize + leverRoomSize && 
+				std::abs(position.y - map->m_levers[j].y) <= keyRoomSize + leverRoomSize)
 			{
 				overlapped = true;
 				break;
@@ -188,8 +189,8 @@ void Map::MapMaker::KeyRooms()
 		//check overlap with other key rooms
 		for (int j = 0; j < i; j++)
 		{
-			if (std::abs(keyRoomPos[i].x - keyRoomPos[j].x) <= minKeyRoomDist &&
-				std::abs(keyRoomPos[i].y - keyRoomPos[j].y) <= minKeyRoomDist)
+			if (std::abs(position.x - map->m_keyMolds[j].x) <= minKeyRoomDist &&
+				std::abs(position.y - map->m_keyMolds[j].y) <= minKeyRoomDist)
 			{
 				overlapped = true;
 				break;
@@ -197,6 +198,7 @@ void Map::MapMaker::KeyRooms()
 		}
 
 		if (overlapped) i--;
+		else map->m_keyMolds[i] = position;
 	}
 }
 
@@ -219,12 +221,16 @@ void Map::MapMaker::AddRooms()
 		
 		map->m_tiles[x + majorRooms[0].x + (y + majorRooms[0].y) * map->m_size.x] = Map::Tile::path;
 
-		map->m_tiles[x + majorRooms[1].x + (y + majorRooms[1].y) * map->m_size.x] = Map::Tile::vault;
+		if (x >= -1 && x <= 1 && y >= -1 && y <= 1)
+			map->m_tiles[x + majorRooms[1].x + (y + majorRooms[1].y) * map->m_size.x] = Map::Tile::portal; //magic vault has different flooring except for the centre
+		else
+			map->m_tiles[x + majorRooms[1].x + (y + majorRooms[1].y) * map->m_size.x] = Map::Tile::vault;
 
 		map->m_tiles[x + majorRooms[2].x + (y + majorRooms[2].y) * map->m_size.x] = Map::Tile::cell; // the cell entirely is covered with different flooring
 	}
 
 	//Create Exit -------------------------------------------------------------------------
+	map->m_playerSpawn = majorRooms[0];
 	intV2 direction = intV2();
 	intV2 centre = intV2{ (int)round((map->m_size.x - 1) / 2), (int)round((map->m_size.y - 1) / 2) };
 	if (abs(centre.x - majorRooms[0].x) > abs(centre.y - majorRooms[0].y))
@@ -235,39 +241,42 @@ void Map::MapMaker::AddRooms()
 	{
 		direction.y = centre.y - majorRooms[0].y > 0 ? -1 : 1;
 	}
-	map->m_tiles[majorRooms[0].x + (direction.x * (majorRoomSize + 1)) + (majorRooms->y + (direction.y * (majorRoomSize + 1))) * map->m_size.x] = Map::Tile::exit;
-
-	//Create vault Portal ----------------------------------------------------------------
+	map->m_exit = intV2{ majorRooms[0].x + (direction.x * (majorRoomSize + 1)), majorRooms->y + (direction.y * (majorRoomSize + 1)) };
+	map->m_tiles[map->m_exit.x + map->m_exit.y * map->m_size.x] = Map::Tile::exit;
+	//-------------------------------------------------------------------------------------
 
 	int totalKeyRoomSize = 2 * keyRoomSize + 1;
-	for (int i = 0; i < totalKeyRoomSize * totalKeyRoomSize; i++)
+	for (int room = 0; room < keyRoomCount; room++)
 	{
-		int x = i % totalKeyRoomSize;
-		int y = i / totalKeyRoomSize;
-
-		x -= keyRoomSize;
-		y -= keyRoomSize;
-
-		for (int room = 0; room < keyRoomCount; room++)
+		for (int i = 0; i < totalKeyRoomSize * totalKeyRoomSize; i++)
 		{
-			map->m_tiles[x + keyRoomPos[room].x + (y + keyRoomPos[room].y) * map->m_size.x] = Map::Tile::key;
+			int x = i % totalKeyRoomSize;
+			int y = i / totalKeyRoomSize;
+
+			x -= keyRoomSize;
+			y -= keyRoomSize;
+
+			
+			map->m_tiles[x + map->m_keyMolds[room].x + (y + map->m_keyMolds[room].y) * map->m_size.x] = Map::Tile::path;
 		}
 	}
+
 
 	int totalLeverRoomSize = 2 * leverRoomSize + 1;
-	for (int i = 0; i < totalLeverRoomSize * totalLeverRoomSize; i++)
+	for (int room = 0; room < leverRoomCount; room++)
 	{
-		int x = i % totalLeverRoomSize;
-		int y = i / totalLeverRoomSize;
-
-		x -= leverRoomSize;
-		y -= leverRoomSize;
-
-		for (int room = 0; room < leverRoomCount; room++)
+		for (int i = 0; i < totalLeverRoomSize * totalLeverRoomSize; i++)
 		{
-			map->m_tiles[x + leverRoomPos[room].x + (y + leverRoomPos[room].y) * map->m_size.x] = Map::Tile::lever;
+			int x = i % totalLeverRoomSize;
+			int y = i / totalLeverRoomSize;
+
+			x -= leverRoomSize;
+			y -= leverRoomSize;
+
+			map->m_tiles[x + map->m_levers[room].x + (y + map->m_levers[room].y) * map->m_size.x] = Map::Tile::path;
 		}
 	}
+	
 }
 
 void Map::MapMaker::AddWalls()
@@ -289,16 +298,22 @@ void Map::MapMaker::AddWalls()
 	{
 		if (map->m_tiles[x + map->m_size.x] != Map::Tile::null && map->m_tiles[x + map->m_size.x] != Map::Tile::wall)
 		{
-			map->m_tiles[x] = Map::Tile::wall;
-			map->m_tiles[x + 1] = Map::Tile::wall;
-			map->m_tiles[x - 1] = Map::Tile::wall;
+			if (map->m_tiles[x] == Map::Tile::null)
+				map->m_tiles[x] = Map::Tile::wall;
+			if (map->m_tiles[x + 1] == Map::Tile::null)
+				map->m_tiles[x + 1] = Map::Tile::wall;
+			if (map->m_tiles[x - 1] == Map::Tile::null)
+				map->m_tiles[x - 1] = Map::Tile::wall;
 
 		}
 		if (map->m_tiles[x + map->m_size.x * (map->m_size.y - 2)] != Map::Tile::null && map->m_tiles[x + map->m_size.x * (map->m_size.y - 2)] != Map::Tile::wall)
 		{
-			map->m_tiles[x + map->m_size.x * (map->m_size.y - 1)] = Map::Tile::wall;
-			map->m_tiles[x + map->m_size.x * (map->m_size.y - 1) + 1] = Map::Tile::wall;
-			map->m_tiles[x + map->m_size.x * (map->m_size.y - 1) - 1] = Map::Tile::wall;
+			if (map->m_tiles[x + map->m_size.x * (map->m_size.y - 1)] == Map::Tile::null)
+				map->m_tiles[x + map->m_size.x * (map->m_size.y - 1)] = Map::Tile::wall;
+			if (map->m_tiles[x + map->m_size.x * (map->m_size.y - 1) + 1] == Map::Tile::null)
+				map->m_tiles[x + map->m_size.x * (map->m_size.y - 1) + 1] = Map::Tile::wall;
+			if (map->m_tiles[x + map->m_size.x * (map->m_size.y - 1) - 1] == Map::Tile::null)
+				map->m_tiles[x + map->m_size.x * (map->m_size.y - 1) - 1] = Map::Tile::wall;
 		}
 	}
 	for (int y = 1; y < map->m_size.y - 1; y++)

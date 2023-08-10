@@ -31,6 +31,8 @@ float v2::Magnitude()
 v2 v2::Normalized()
 {
 	float mag = Magnitude();
+	if (mag == 0)
+		return v2();
 	return v2(x / mag, y / mag);
 }
 
