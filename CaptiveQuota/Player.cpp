@@ -5,9 +5,23 @@
 
 const float Player::speed = 350;
 
+Player::Player()
+{
+	m_direction = Direction::down;
+	m_textures[static_cast<int>(Direction::up)] = LoadTexture("Assets\\Images\\Player_Up.png");
+	m_textures[static_cast<int>(Direction::down)] = LoadTexture("Assets\\Images\\Player_Down.png");
+	m_textures[static_cast<int>(Direction::left)] = LoadTexture("Assets\\Images\\Player_Left.png");
+	m_textures[static_cast<int>(Direction::right)] = LoadTexture("Assets\\Images\\Player_Right.png");
+
+	m_hitbox = AABB();
+	m_hitbox.size = v2(m_textures[0].width, m_textures[0].height);
+}
+
 void Player::Update(float deltaTime)
 {
 	Move(deltaTime);
+
+	m_hitbox.position = v2(position.x, position.y - m_hitbox.size.y / 2);
 }
 
 void Player::Move(float deltaTime)
@@ -24,23 +38,27 @@ void Player::Move(float deltaTime)
 
 	moveDir = moveDir.Normalized();
 
-	if (moveDir.x < 0)
-		direction = Direction::left;
-	else if (moveDir.x > 0)
-		direction = Direction::right;
 
 	if (moveDir.y < 0)
-		direction = Direction::up;
+		m_direction = Direction::up;
 	else if (moveDir.y > 0)
-		direction = Direction::down;
+		m_direction = Direction::down;
+
+	if (moveDir.x < 0)
+		m_direction = Direction::left;
+	else if (moveDir.x > 0)
+		m_direction = Direction::right;
+
 
 	position = position + (moveDir * speed * deltaTime);
 }
 
 void Player::Draw()
 {
-	int playerHeight = 100;
-	int playerWidth = 50;
-	DrawRectangle(WINDOWX / 2 - (playerWidth / 2), WINDOWY / 2 - (playerHeight / 2), playerWidth, playerHeight, WHITE);
-	//DrawTexture(textures[static_cast<int>(direction)], )
+	float scale = 0.5f;
+	float playerWidth = m_textures[static_cast<int>(m_direction)].width * scale;
+	float playerHeight = m_textures[static_cast<int>(m_direction)].height * scale;
+
+	Vector2 texturePos = Vector2{ float(WINDOWX / 2 - (playerWidth / 2)), float(WINDOWY / 2 - (playerHeight / 2)) };
+	DrawTextureEx(m_textures[static_cast<int>(m_direction)], texturePos, 0, scale, Color{ 255, 255, 255, 255 });
 }

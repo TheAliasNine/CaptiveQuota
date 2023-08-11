@@ -1,4 +1,5 @@
 #pragma once
+#include "AABB.h"
 #include "SceneObject.h"
 
 #include "raylib.h"
@@ -17,14 +18,19 @@ class Player : public SceneObject
 		DIRECTIONCOUNT
 	};
 
-	Direction direction;
+	Direction m_direction;
 
-	Texture2D textures[static_cast<int>(Direction::DIRECTIONCOUNT)];
+	Texture2D m_textures[static_cast<int>(Direction::DIRECTIONCOUNT)];
+	AABB m_hitbox;
 
 	void Move(float deltaTime);
 
+
 public:
+	Player();
 	void Update(float deltaTime);
 
 	void Draw();
+
+	AABB Hitbox() { return m_hitbox; }
 };

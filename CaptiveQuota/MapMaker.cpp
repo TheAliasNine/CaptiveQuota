@@ -219,12 +219,9 @@ void Map::MapMaker::AddRooms()
 		x -= majorRoomSize;
 		y -= majorRoomSize;
 		
-		map->m_tiles[x + majorRooms[0].x + (y + majorRooms[0].y) * map->m_size.x] = Map::Tile::path;
+		map->m_tiles[x + majorRooms[0].x + (y + majorRooms[0].y) * map->m_size.x] = Map::Tile::exitRoom;
 
-		if (x >= -1 && x <= 1 && y >= -1 && y <= 1)
-			map->m_tiles[x + majorRooms[1].x + (y + majorRooms[1].y) * map->m_size.x] = Map::Tile::portal; //magic vault has different flooring except for the centre
-		else
-			map->m_tiles[x + majorRooms[1].x + (y + majorRooms[1].y) * map->m_size.x] = Map::Tile::vault;
+		map->m_tiles[x + majorRooms[1].x + (y + majorRooms[1].y) * map->m_size.x] = Map::Tile::vault;
 
 		map->m_tiles[x + majorRooms[2].x + (y + majorRooms[2].y) * map->m_size.x] = Map::Tile::cell; // the cell entirely is covered with different flooring
 	}

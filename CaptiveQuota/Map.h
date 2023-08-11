@@ -4,6 +4,8 @@
 #include "intV2.h"
 #include "v2.h"
 
+#include "raylib.h"
+
 struct Map
 {
 public:
@@ -26,8 +28,9 @@ public:
 		path,
 		cell,
 		exit,
+		exitRoom,
 		vault,
-		portal,
+		TILECOUNT,
 	};
 
 
@@ -87,6 +90,8 @@ private:
 	bool m_leverActive[leverRoomCount];
 
 	int m_cellSize = 100;
+
+	Texture2D m_textures[static_cast<int>(Tile::TILECOUNT)];
 
 #pragma endregion
 
