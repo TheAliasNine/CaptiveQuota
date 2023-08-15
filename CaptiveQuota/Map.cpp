@@ -131,17 +131,29 @@ void Map::CreateMap(unsigned int seed)
 
 void Map::DrawTiles(v2 camPos)
 {
-	//ToDo: change to only draw tiles near the player
-	for (int y = 0; y < m_size.y; y++)
+	v2 centreScreen = camPos;
+	centreScreen.x += WINDOWX / 2;
+	centreScreen.y += WINDOWY / 2;
+	intV2 centre = Vector2ToNode(centreScreen);
+	int halfXNodes = WINDOWX / 2 / m_cellSize + 1;
+	int halfYNodes = WINDOWY / 2 / m_cellSize + 1;
+	intV2 lowestDraw = intV2{ centre.x - halfXNodes, centre.y - halfYNodes };
+	intV2 highestDraw = intV2{ centre.x + halfXNodes + 1, centre.y + halfYNodes + 1 };
+
+	if (highestDraw.x > m_size.x) highestDraw.x = m_size.x;
+	if (highestDraw.y > m_size.y) highestDraw.y = m_size.y;
+	if (lowestDraw.x < 0) lowestDraw.x = 0;
+	if (lowestDraw.y < 0) lowestDraw.y = 0;
+
+	for (int y = lowestDraw.y; y < highestDraw.y; y++)
 	{
-		for (int x = 0; x < m_size.x; x++)
+		for (int x = lowestDraw.x; x < highestDraw.x; x++)
 		{
 			Vector2 position = Vector2{ m_cellSize * x - camPos.x, m_cellSize * y - camPos.y };
 			float scale = m_cellSize / (float)m_textures[static_cast<int>(m_tiles[x + y * m_size.x])].width;
 			DrawTextureEx(m_textures[static_cast<int>(m_tiles[x + y * m_size.x])], position, 0, scale, WHITE);
 		}
 	}
-
 	for (int i = 0; i < keyRoomCount; i++)
 	{
 		DrawCircle(m_cellSize * m_keyMolds[i].x - camPos.x + float (m_cellSize) / 2, m_cellSize * m_keyMolds[i].y - camPos.y + float(m_cellSize) / 2, (float)m_cellSize / 2, RED);
@@ -191,3 +203,8 @@ bool Map::IsPortalActive()
 
 int Map::CellSize() { return m_cellSize; }
 void Map::SetCellSize(int size) { m_cellSize = size; }
+
+intV2 Map::Vector2ToNode(v2 vector)
+{
+	return intV2{ int(round(vector.x)) / m_cellSize, int(round(vector.y)) / m_cellSize };
+}

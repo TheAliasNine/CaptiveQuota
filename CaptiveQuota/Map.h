@@ -51,6 +51,8 @@ public:
 	int CellSize();
 	void SetCellSize(int size);
 
+	intV2 Vector2ToNode(v2 vector);
+
 private:
 
 #pragma region MapMakingConstants

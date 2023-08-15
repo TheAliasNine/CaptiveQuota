@@ -189,6 +189,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapMaker.cpp" />
+    <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="v2.cpp" />
   </ItemGroup>
@@ -207,6 +208,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClInclude Include="intV2.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Minimap.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="v2.h" />

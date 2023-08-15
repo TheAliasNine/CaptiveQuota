@@ -2,6 +2,7 @@
 
 #include "AppState.h"
 #include "Map.h"
+#include "Minimap.h"
 #include "Player.h"
 
 #include "v2.h"
@@ -11,6 +12,7 @@
 class Game : public AppState
 {
 	Map map;
+	Minimap minimap;
 	
 	v2 camPos = v2();
 
@@ -19,6 +21,8 @@ class Game : public AppState
 	Texture2D background;
 
 	void PhysicStep();
+
+	void DrawUI();
 
 public:
 
