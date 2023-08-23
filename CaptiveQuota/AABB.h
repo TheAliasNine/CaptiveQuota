@@ -9,8 +9,8 @@ public:
 	v2 position;
 	v2 size;
 
-	v2 Min() { return position - size / 2; }
-	v2 Max() { return position + size / 2; }
+	v2 Min() { return position - (size / 2); }
+	v2 Max() { return position + (size / 2); }
 
 
 	bool CheckCollision(v2 point);

@@ -206,5 +206,5 @@ void Map::SetCellSize(int size) { m_cellSize = size; }
 
 intV2 Map::Vector2ToNode(v2 vector)
 {
-	return intV2{ int(round(vector.x)) / m_cellSize, int(round(vector.y)) / m_cellSize };
+	return intV2{ int(vector.x) / m_cellSize, int(vector.y) / m_cellSize };
 }

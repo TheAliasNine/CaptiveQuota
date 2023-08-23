@@ -94,6 +94,9 @@
     <ClInclude Include="Minimap.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="BoxObject.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="App">

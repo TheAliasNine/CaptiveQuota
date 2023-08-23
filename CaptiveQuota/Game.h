@@ -22,6 +22,8 @@ class Game : public AppState
 
 	void PhysicStep();
 
+	void ResolveMapCollisions(BoxObject* obj);
+
 	void DrawUI();
 
 public:

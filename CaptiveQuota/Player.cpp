@@ -4,6 +4,7 @@
 #include "v2.h"
 
 const float Player::speed = 350;
+const float Player::scale = 0.5f;
 
 Player::Player()
 {
@@ -14,14 +15,14 @@ Player::Player()
 	m_textures[static_cast<int>(Direction::right)] = LoadTexture("Assets\\Images\\Player_Right.png");
 
 	m_hitbox = AABB();
-	m_hitbox.size = v2(m_textures[0].width, m_textures[0].height);
+	m_hitbox.size = v2((m_textures[0].width - 60) * scale, (m_textures[0].height / 2) * scale);
 }
 
 void Player::Update(float deltaTime)
 {
 	Move(deltaTime);
 
-	m_hitbox.position = v2(position.x, position.y - m_hitbox.size.y / 2);
+	m_hitbox.position = v2(position.x, position.y + m_hitbox.size.y / 2);
 }
 
 void Player::Move(float deltaTime)
@@ -55,7 +56,6 @@ void Player::Move(float deltaTime)
 
 void Player::Draw()
 {
-	float scale = 0.5f;
 	float playerWidth = m_textures[static_cast<int>(m_direction)].width * scale;
 	float playerHeight = m_textures[static_cast<int>(m_direction)].height * scale;
 

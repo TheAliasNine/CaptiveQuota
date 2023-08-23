@@ -7,7 +7,7 @@
 
 class AABB;
 class Circle;
-class Color;
+struct Color;
 
 class Collider
 {

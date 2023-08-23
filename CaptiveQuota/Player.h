@@ -1,13 +1,13 @@
 #pragma once
-#include "AABB.h"
-#include "SceneObject.h"
+#include "BoxObject.h"
 
 #include "raylib.h"
 
-class Player : public SceneObject
+class Player : public BoxObject
 {
 
 	static const float speed;
+	static const float scale;
 
 	enum class Direction
 	{
@@ -21,7 +21,6 @@ class Player : public SceneObject
 	Direction m_direction;
 
 	Texture2D m_textures[static_cast<int>(Direction::DIRECTIONCOUNT)];
-	AABB m_hitbox;
 
 	void Move(float deltaTime);
 
@@ -32,5 +31,5 @@ public:
 
 	void Draw();
 
-	AABB Hitbox() { return m_hitbox; }
+	
 };

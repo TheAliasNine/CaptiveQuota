@@ -32,8 +32,11 @@ Game::~Game()
 void Game::Update(float deltaTime)
 {
 	player.Update(deltaTime);
-	camPos = player.position - v2(WINDOWX / 2, WINDOWY / 2);
 	
+	minimap.DiscoverTile(map.Vector2ToNode(player.position));
+
+	PhysicStep();
+	camPos = player.position - v2(WINDOWX / 2, WINDOWY / 2);
 }
 
 void Game::Draw()
@@ -57,18 +60,80 @@ void Game::Draw()
 
 
 	map.DrawTiles(camPos);
-	minimap.Draw();
 	player.Draw();
 
-	DrawFPS(20, 20);
+	DrawUI();
 
+#ifdef _DEBUG
+	DrawFPS(20, 20);
+#endif
+}
+
+void Game::DrawUI()
+{
+	minimap.Draw(map.Vector2ToNode(player.position));
 }
 
 void Game::PhysicStep()
 {
-	//get the surrounding 8 tiles, see if any are walls in it, check if player is colliding with any
-
-	//move player to not collide with any
-
+	//move player to not collide with any tiles
+	ResolveMapCollisions(&player);
 	//do the same for the NPCs
+}
+
+#include <stdio.h>
+
+//Assumes that the hitbox is no larger than the size of 2xCellSize
+void Game::ResolveMapCollisions(BoxObject* obj)
+{
+	v2 hitboxOffset = v2();
+	for (int i = 0; i < 9; i++)
+	{
+		intV2 direction;
+		switch (i)
+		{
+		case(0):
+			direction = intV2{ 0, 0 };
+			break;
+		case(1):
+			direction = intV2{ 1, 0 };
+			break;
+		case(2):
+			direction = intV2{ -1, 0 };
+			break;
+		case(3):
+			direction = intV2{ 0, 1 };
+			break;
+		case(4):
+			direction = intV2{ 0, -1 };
+			break;
+		case(5):
+			direction = intV2{ -1, 1 };
+			break;
+		case(6):
+			direction = intV2{ 1, 1 };
+			break;
+		case(7):
+			direction = intV2{ 1, -1 };
+			break;
+		case(8):
+			direction = intV2{ -1, -1 };
+			break;
+		}
+
+		direction = direction + map.Vector2ToNode(obj->Hitbox().position);
+		int index = direction.x + direction.y * map.Size().x;
+		if (map[index] != Map::Tile::wall) continue;
+
+		AABB tileAABB = AABB();
+		tileAABB.position = v2(direction.x * map.CellSize() + map.CellSize() / 2, direction.y * map.CellSize() + map.CellSize() / 2);
+		tileAABB.size = v2(map.CellSize());
+
+		CollisionInfo info = CollisionInfo();
+		AABB hitbox = obj->Hitbox();
+		hitbox.position = hitbox.position + hitboxOffset;
+		if (!hitbox.CheckCollision(&tileAABB, &info)) continue;
+		hitboxOffset = hitboxOffset + info.depth * info.direction;
+	}
+	obj->position = obj->position + hitboxOffset;
 }

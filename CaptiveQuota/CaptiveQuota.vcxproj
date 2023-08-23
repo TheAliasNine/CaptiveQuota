@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WINDOWX=800;WINDOWY=450;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWX=1200;WINDOWY=675;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Raylib\include;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -110,7 +110,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WINDOWX=800;WINDOWY=450;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWX=1200;WINDOWY=675;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Raylib\include;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -158,7 +158,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WINDOWX=800;WINDOWY=450;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWX=1200;WINDOWY=675;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Raylib\include;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -198,6 +198,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClInclude Include="App.h" />
     <ClInclude Include="AppIntro.h" />
     <ClInclude Include="AppState.h" />
+    <ClInclude Include="BoxObject.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Collider.h" />
