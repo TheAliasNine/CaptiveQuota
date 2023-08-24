@@ -42,6 +42,7 @@ void InputManager::KeyBinds::LoadDefaults()
 	binds[Down].key = KEY_S;
 	binds[Left].key = KEY_A;
 	binds[Right].key = KEY_D;
+	binds[Cast].key = MOUSE_LEFT_BUTTON;
 }
 
 bool InputManager::KeyBinds::LoadByFile()

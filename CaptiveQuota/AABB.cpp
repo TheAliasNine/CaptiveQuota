@@ -11,7 +11,7 @@ bool AABB::CheckCollision(v2 point)
 bool AABB::CheckCollision(AABB* aabb, CollisionInfo* outInfo)
 {
 	bool collided = !(Max().x <= aabb->Min().x || aabb->Max().x <= Min().x || Max().y <= aabb->Min().y || aabb->Max().y <= Min().y);
-	if (!collided) return collided;
+	if (!collided || outInfo == nullptr) return collided;
 
 	CollisionInfo info = CollisionInfo();
 	info.collided = true;
@@ -51,6 +51,8 @@ bool AABB::CheckCollision(AABB* aabb, CollisionInfo* outInfo)
 bool AABB::CheckCollision(Circle* circle, CollisionInfo* outInfo)
 {
 	v2 closestPoint = v2::ClampVector(circle->position, Min(), Max());
+	closestPoint.x -= position.x;
+	closestPoint.y -= position.y;
 	return circle->radius * circle->radius > closestPoint.x * closestPoint.x + closestPoint.y * closestPoint.y;
 }
 

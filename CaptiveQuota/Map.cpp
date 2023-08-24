@@ -59,6 +59,10 @@ Map::Map(const Map& other)
 	{
 		m_tiles[i] = other.m_tiles[i];
 	}
+	for (int i = 0; i < static_cast<int>(Tile::TILECOUNT); i++)
+	{
+		m_textures[i] = other.m_textures[i];
+	}
 }
 
 Map& Map::operator= (const Map& other)
@@ -95,6 +99,11 @@ Map::Map(Map&& other)
 	for (int i = 0; i < m_size.x * m_size.y; i++)
 	{
 		m_tiles[i] = other.m_tiles[i];
+	}
+
+	for (int i = 0; i < static_cast<int>(Tile::TILECOUNT); i++)
+	{
+		m_textures[i] = other.m_textures[i];
 	}
 }
 

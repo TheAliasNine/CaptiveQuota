@@ -1,20 +1,20 @@
 #include "Game.h"
 
+#include "AABB.h"
+
 #include "InputManager.h"
 
 
 Game::Game()
 {
-	map = Map();
 	map.CreateMap(std::time(nullptr));
 	map.SetCellSize(100);
 
 	minimap = Minimap();
 	minimap.LoadMap(map);
 
-	camPos = v2(map.PlayerSpawn().x * map.CellSize(), map.PlayerSpawn().y * map.CellSize());
-	player = Player();
 	player.position = v2(map.PlayerSpawn().x, map.PlayerSpawn().y) * map.CellSize();
+	camPos = player.position - v2(WINDOWX / 2, WINDOWY / 2);
 
 	background = LoadTexture("Assets\\Images\\Background.png");
 
@@ -22,6 +22,7 @@ Game::Game()
 	InputManager::EnableBind(InputManager::Down);
 	InputManager::EnableBind(InputManager::Left);
 	InputManager::EnableBind(InputManager::Right);
+	InputManager::EnableBind(InputManager::Cast);
 }
 
 Game::~Game()
@@ -34,6 +35,17 @@ void Game::Update(float deltaTime)
 	player.Update(deltaTime);
 	
 	minimap.DiscoverTile(map.Vector2ToNode(player.position));
+
+	//FireBalls
+	for (auto iter = fireballs.begin(); iter != fireballs.end(); iter++)
+	{
+		iter->Update(deltaTime);
+	}
+
+	if (InputManager::KeyPressed(InputManager::Cast))
+	{
+		ShootFireBall();
+	}
 
 	PhysicStep();
 	camPos = player.position - v2(WINDOWX / 2, WINDOWY / 2);
@@ -60,7 +72,13 @@ void Game::Draw()
 
 
 	map.DrawTiles(camPos);
-	player.Draw();
+	player.Draw(camPos);
+
+	for (auto iter = fireballs.begin(); iter != fireballs.end(); iter++)
+	{
+		iter->Draw(camPos);
+	}
+
 
 	DrawUI();
 
@@ -76,15 +94,24 @@ void Game::DrawUI()
 
 void Game::PhysicStep()
 {
-	//move player to not collide with any tiles
-	ResolveMapCollisions(&player);
-	//do the same for the NPCs
+	//CheckMapCollisions
+	CheckMapCollisions(&player, true);
+	
+	auto iter = fireballs.begin();
+	while (iter != fireballs.end())
+	{
+		if(!CheckMapCollisions(&*iter, false))
+		{
+			iter++;
+			continue;
+		}
+
+		iter = fireballs.erase(iter);
+	}
 }
 
-#include <stdio.h>
-
 //Assumes that the hitbox is no larger than the size of 2xCellSize
-void Game::ResolveMapCollisions(BoxObject* obj)
+bool Game::CheckMapCollisions(HitBoxObject* obj, bool resolve)
 {
 	v2 hitboxOffset = v2();
 	for (int i = 0; i < 9; i++)
@@ -121,19 +148,40 @@ void Game::ResolveMapCollisions(BoxObject* obj)
 			break;
 		}
 
-		direction = direction + map.Vector2ToNode(obj->Hitbox().position);
+		direction = direction + map.Vector2ToNode(obj->Hitbox()->position);
 		int index = direction.x + direction.y * map.Size().x;
+		if (index < 0 || index >= map.Size().x * map.Size().y) continue;
 		if (map[index] != Map::Tile::wall) continue;
 
 		AABB tileAABB = AABB();
 		tileAABB.position = v2(direction.x * map.CellSize() + map.CellSize() / 2, direction.y * map.CellSize() + map.CellSize() / 2);
 		tileAABB.size = v2(map.CellSize());
 
+		if (!resolve)
+		{
+			if (obj->Hitbox()->CheckCollision(&tileAABB, nullptr)) return true;
+			continue;
+		}
+
 		CollisionInfo info = CollisionInfo();
-		AABB hitbox = obj->Hitbox();
-		hitbox.position = hitbox.position + hitboxOffset;
-		if (!hitbox.CheckCollision(&tileAABB, &info)) continue;
+		Collider* hitbox = obj->Hitbox();
+		hitbox->position = hitbox->position + hitboxOffset;
+		bool collided = hitbox->CheckCollision(&tileAABB, &info);
+		hitbox->position = hitbox->position - hitboxOffset;
+		if (!collided) continue;
 		hitboxOffset = hitboxOffset + info.depth * info.direction;
 	}
 	obj->position = obj->position + hitboxOffset;
+	return hitboxOffset.x != 0 || hitboxOffset.y != 0;
+}
+
+
+void Game::ShootFireBall()
+{
+	v2 direction = v2();
+	direction.x = GetMousePosition().x - WINDOWX / 2;
+	direction.y = GetMousePosition().y - WINDOWY / 2;
+	direction = direction.Normalized();
+
+	fireballs.push_back(FireBall(player.position, direction));
 }

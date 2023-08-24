@@ -6,7 +6,6 @@ class Circle : public Collider
 {
 public:
 
-	v2 position;
 	float radius;
 
 	bool CheckCollision(v2 point);

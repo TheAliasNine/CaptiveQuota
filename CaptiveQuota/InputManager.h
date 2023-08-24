@@ -19,6 +19,7 @@ public:
 		Down,
 		Left,
 		Right,
+		Cast,
 		OpenMenu,
 
 		KEYBINDLENGTH,

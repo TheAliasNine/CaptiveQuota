@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AppState.h"
+#include "FireBall.h"
 #include "Map.h"
 #include "Minimap.h"
 #include "Player.h"
@@ -8,6 +9,8 @@
 #include "v2.h"
 
 #include "raylib.h"
+
+#include <list>
 
 class Game : public AppState
 {
@@ -17,14 +20,17 @@ class Game : public AppState
 	v2 camPos = v2();
 
 	Player player;
+	std::list<FireBall> fireballs;
 	
 	Texture2D background;
 
 	void PhysicStep();
 
-	void ResolveMapCollisions(BoxObject* obj);
+	bool CheckMapCollisions(HitBoxObject* obj, bool resolve);
 
 	void DrawUI();
+
+	void ShootFireBall();
 
 public:
 
@@ -33,5 +39,4 @@ public:
 
 	void Update(float deltaTime);
 	void Draw();
-
 };

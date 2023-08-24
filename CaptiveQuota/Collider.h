@@ -14,6 +14,8 @@ class Collider
 protected:
 
 public:
+	v2 position;
+
 	virtual bool CheckCollision(Collider* other) { return other->CheckCollision(this); }
 	virtual bool CheckCollision(v2 point) = 0;
 	virtual bool CheckCollision(AABB* other, CollisionInfo* outInfo) = 0;

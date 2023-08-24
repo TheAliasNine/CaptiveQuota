@@ -1,5 +1,6 @@
 #include "Player.h"
 
+#include "AABB.h"
 #include "InputManager.h"
 #include "v2.h"
 
@@ -14,15 +15,60 @@ Player::Player()
 	m_textures[static_cast<int>(Direction::left)] = LoadTexture("Assets\\Images\\Player_Left.png");
 	m_textures[static_cast<int>(Direction::right)] = LoadTexture("Assets\\Images\\Player_Right.png");
 
-	m_hitbox = AABB();
-	m_hitbox.size = v2((m_textures[0].width - 60) * scale, (m_textures[0].height / 2) * scale);
+	AABB* aabb = new AABB();
+	aabb->size = v2((m_textures[0].width - 60) * scale, (m_textures[0].height / 2) * scale);
+	m_hitbox = aabb;
+}
+#pragma region Rule of 5
+Player::~Player()
+{
+	for (int i = 0; i < static_cast<int>(Direction::DIRECTIONCOUNT); i++)
+	{
+		UnloadTexture(m_textures[i]);
+	}
 }
 
+Player::Player(const Player& other)
+{
+	m_textures[static_cast<int>(Direction::up)] = LoadTexture("Assets\\Images\\Player_Up.png");
+	m_textures[static_cast<int>(Direction::down)] = LoadTexture("Assets\\Images\\Player_Down.png");
+	m_textures[static_cast<int>(Direction::left)] = LoadTexture("Assets\\Images\\Player_Left.png");
+	m_textures[static_cast<int>(Direction::right)] = LoadTexture("Assets\\Images\\Player_Right.png");
+
+	m_direction = other.m_direction;
+	m_hitbox = new AABB(*static_cast<AABB*>(other.m_hitbox));
+}
+
+Player& Player::operator= (const Player& other)
+{
+	m_direction = other.m_direction;
+	m_hitbox = new AABB(*static_cast<AABB*>(other.m_hitbox));
+	return *this;
+}
+Player::Player(Player&& other)
+{
+	for (int i = 0; i < static_cast<int>(Direction::DIRECTIONCOUNT); i++)
+	{
+		m_textures[i] = other.m_textures[i];
+		other.m_textures[i] = Texture2D();
+	}
+
+	m_direction = other.m_direction;
+	m_hitbox = new AABB(*static_cast<AABB*>(other.m_hitbox));
+}
+Player& Player::operator= (Player&& other)
+{
+	m_direction = other.m_direction;
+	m_hitbox = new AABB(*static_cast<AABB*>(other.m_hitbox));
+	return *this;
+}
+
+#pragma endregion
 void Player::Update(float deltaTime)
 {
 	Move(deltaTime);
 
-	m_hitbox.position = v2(position.x, position.y + m_hitbox.size.y / 2);
+	m_hitbox->position = v2(position.x, position.y + (m_textures[0].height / 2) * scale / 2);
 }
 
 void Player::Move(float deltaTime)
@@ -54,7 +100,7 @@ void Player::Move(float deltaTime)
 	position = position + (moveDir * speed * deltaTime);
 }
 
-void Player::Draw()
+void Player::Draw(v2 camPos)
 {
 	float playerWidth = m_textures[static_cast<int>(m_direction)].width * scale;
 	float playerHeight = m_textures[static_cast<int>(m_direction)].height * scale;

@@ -1,9 +1,9 @@
 #pragma once
-#include "BoxObject.h"
+#include "HitBoxObject.h"
 
 #include "raylib.h"
 
-class Player : public BoxObject
+class Player : public HitBoxObject
 {
 
 	static const float speed;
@@ -27,9 +27,15 @@ class Player : public BoxObject
 
 public:
 	Player();
+	~Player();
+	Player(const Player& other);
+	Player& operator= (const Player& other);
+	Player(Player&& other);
+	Player& operator= (Player&& other);
+
 	void Update(float deltaTime);
 
-	void Draw();
+	void Draw(v2 camPos);
 
 	
 };
