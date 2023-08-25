@@ -5,11 +5,12 @@
 #include "raymath.h"
 
 const float FireBall::speed = 1000;
-const float FireBall::animationTime = 0.5f;
+const float FireBall::animationTime = 0.2f;
 const float FireBall::scale = 3;
+const float FireBall::castOffSet = 50;
 
 
-FireBall::FireBall(v2 position, v2 direction)
+FireBall::FireBall(bool casting, v2 position, v2 direction)
 {
 	for (int i = 0; i < frameCount; i++)
 	{
@@ -85,10 +86,15 @@ FireBall& FireBall::operator= (FireBall&& other)
 
 void FireBall::Update(float deltaTime)
 {
-	//position = position + speed * m_direction * deltaTime;
-
 	m_timer += deltaTime;
 
+	if (m_casting)
+	{
+		
+		return;
+	}
+
+	position = position + speed * m_direction * deltaTime;
 	m_hitbox->position = position;
 }
 
@@ -100,12 +106,42 @@ void FireBall::Draw(v2 camPos)
 
 	float angle = Vector2Angle(Vector2{ 0, 0 }, Vector2{ m_direction.x, m_direction.y });
 
+	if (m_casting)
+	{
+		Vector2 halfSize = Vector2{ (float)m_animationFrames[frame].width / 2 * scale * m_castingProgress - castOffSet, (float)m_animationFrames[frame].width / 2 * scale * m_castingProgress};
+		Vector2 rotated = Vector2Rotate(halfSize, angle);
 
-	Vector2 halfSize = Vector2{ (float)m_animationFrames[frame].width / 2 * scale, (float)m_animationFrames[frame].width / 2 * scale};
-	Vector2 rotated = Vector2Rotate(halfSize, angle);
+		Vector2 drawPos = Vector2{ position.x - camPos.x, position.y - camPos.y };
+		drawPos = Vector2Subtract(drawPos, rotated);
 
-	Vector2 drawPos = Vector2{ position.x - camPos.x, position.y - camPos.y };
-	drawPos = Vector2Subtract(drawPos, rotated);
+		DrawTextureEx(m_animationFrames[frame], drawPos, angle, scale * m_castingProgress, WHITE);
+	}
+	else
+	{
+		Vector2 halfSize = Vector2{ (float)m_animationFrames[frame].width / 2 * scale, (float)m_animationFrames[frame].width / 2 * scale };
+		Vector2 rotated = Vector2Rotate(halfSize, angle);
 
-	DrawTextureEx(m_animationFrames[frame], drawPos, angle, scale, WHITE);
+		Vector2 drawPos = Vector2{ position.x - camPos.x, position.y - camPos.y };
+		drawPos = Vector2Subtract(drawPos, rotated);
+
+		DrawTextureEx(m_animationFrames[frame], drawPos, angle, scale, WHITE);
+	}
+}
+
+bool FireBall::Casting() { return m_casting; }
+
+void FireBall::Fire()
+{
+	m_casting = false;
+
+	float angle = Vector2Angle(Vector2{ 0, 0 }, Vector2{ m_direction.x, m_direction.y });
+	Vector2 offset = Vector2Rotate(Vector2{ castOffSet, 0 }, angle);
+	position = position + v2(offset.x, offset.y);
+}
+
+void FireBall::UpdateCastingInfo(v2 position, v2 direction, float progress)
+{
+	this->position = position;
+	m_direction = direction;
+	m_castingProgress = progress;
 }

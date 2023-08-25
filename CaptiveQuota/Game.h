@@ -14,15 +14,23 @@
 
 class Game : public AppState
 {
-	Map map;
-	Minimap minimap;
+	Map m_map;
+	Minimap m_minimap;
 	
-	v2 camPos = v2();
+	v2 m_camPos = v2();
 
-	Player player;
-	std::list<FireBall> fireballs;
+	Player m_player;
+	std::list<FireBall> m_fireballs;
+
+	Sound m_fireballcast;
+
+	static const float castTime;
+	bool m_casting = false;
+	float m_castingTimer = 0;
+
+
 	
-	Texture2D background;
+	Texture2D m_background;
 
 	void PhysicStep();
 
@@ -30,7 +38,10 @@ class Game : public AppState
 
 	void DrawUI();
 
+	void CastFireBall();
 	void ShootFireBall();
+
+	void CreateExplosion();
 
 public:
 

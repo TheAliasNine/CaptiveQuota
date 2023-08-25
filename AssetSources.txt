@@ -1,1 +1,11 @@
-AppIntro = misc_menu_2.wav from GUI_Sound_Effects_by_Lokif
+Art
+Player Sprites by Trinni
+Map Tile Sprites by JaggedStone									https://opengameart.org/content/dungeon-tile-set
+FireBall by Revon												https://opengameart.org/content/fireball-3
+
+Music
+Main Menu Music by brandon75689									https://opengameart.org/content/tragic-ambient-main-menu
+
+Sound Effects
+AppIntro = misc_menu_2.wav from GUI_Sound_Effects_by_Lokif		https://opengameart.org/content/gui-sound-effects
+FireBall Sound by Julien Matthey								https://freesound.org/people/Julien%20Matthey/sounds/105016/

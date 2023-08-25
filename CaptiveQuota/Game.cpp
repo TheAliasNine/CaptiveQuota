@@ -5,18 +5,21 @@
 #include "InputManager.h"
 
 
+const float Game::castTime = 0.5f;
+
 Game::Game()
 {
-	map.CreateMap(std::time(nullptr));
-	map.SetCellSize(100);
+	m_map.CreateMap(std::time(nullptr));
+	m_map.SetCellSize(100);
 
-	minimap = Minimap();
-	minimap.LoadMap(map);
+	m_minimap.LoadMap(m_map);
 
-	player.position = v2(map.PlayerSpawn().x, map.PlayerSpawn().y) * map.CellSize();
-	camPos = player.position - v2(WINDOWX / 2, WINDOWY / 2);
+	m_player.position = v2(m_map.PlayerSpawn().x, m_map.PlayerSpawn().y) * m_map.CellSize();
+	m_camPos = m_player.position - v2(WINDOWX / 2, WINDOWY / 2);
 
-	background = LoadTexture("Assets\\Images\\Background.png");
+	m_background = LoadTexture("Assets\\Images\\Background.png");
+
+	m_fireballcast = LoadSound("Assets\\Sound\\FireBallCast.mp3");
 
 	InputManager::EnableBind(InputManager::Up);
 	InputManager::EnableBind(InputManager::Down);
@@ -27,56 +30,71 @@ Game::Game()
 
 Game::~Game()
 {
-	UnloadTexture(background);
+	UnloadTexture(m_background);
+	UnloadSound(m_fireballcast);
 }
 
 void Game::Update(float deltaTime)
 {
-	player.Update(deltaTime);
+	m_player.Update(deltaTime);
 	
-	minimap.DiscoverTile(map.Vector2ToNode(player.position));
+	m_minimap.DiscoverTile(m_map.Vector2ToNode(m_player.position));
+
+
 
 	//FireBalls
-	for (auto iter = fireballs.begin(); iter != fireballs.end(); iter++)
+	if (m_casting)
+	{
+		m_castingTimer += deltaTime;
+		v2 direction = v2();
+
+		direction.x = GetMousePosition().x - WINDOWX / 2;
+		direction.y = GetMousePosition().y - WINDOWY / 2;
+		direction = direction.Normalized();
+		m_fireballs.back().UpdateCastingInfo(m_player.position, direction, m_castingTimer / castTime);
+
+		if (m_castingTimer >= castTime)
+			ShootFireBall();
+	}
+
+	for (auto iter = m_fireballs.begin(); iter != m_fireballs.end(); iter++)
 	{
 		iter->Update(deltaTime);
 	}
 
-	if (InputManager::KeyPressed(InputManager::Cast))
-	{
-		ShootFireBall();
-	}
+	if (InputManager::KeyPressed(InputManager::Cast) && !m_casting) CastFireBall();
+
 
 	PhysicStep();
-	camPos = player.position - v2(WINDOWX / 2, WINDOWY / 2);
+	m_camPos = m_player.position - v2(WINDOWX / 2, WINDOWY / 2);
 }
 
 void Game::Draw()
 {	
-	int offsetX = - int(round(camPos.x)) % background.width;
-	int offsetY = - int(round(camPos.y)) % background.height;
+	int offsetX = - int(round(m_camPos.x)) % m_background.width;
+	int offsetY = - int(round(m_camPos.y)) % m_background.height;
 	
-	if (offsetX > 0) offsetX -= background.width;
-	if (offsetY > 0) offsetY -= background.height;
+	if (offsetX > 0) offsetX -= m_background.width;
+	if (offsetY > 0) offsetY -= m_background.height;
 
 	for (int i = 0; i < 9; i++)
 	{
 		int x = i % 3 - 1;
 		int y = i / 3 - 1;
     
-		x = (WINDOWX / 2) + x * background.width + offsetX;
-		y = (WINDOWY / 2) + y * background.height + offsetY;
+		x = (WINDOWX / 2) + x * m_background.width + offsetX;
+		y = (WINDOWY / 2) + y * m_background.height + offsetY;
 
-		DrawTexture(background, x, y, WHITE);
+		DrawTexture(m_background, x, y, WHITE);
 	}
 
 
-	map.DrawTiles(camPos);
-	player.Draw(camPos);
+	m_map.DrawTiles(m_camPos);
+	m_player.Draw(m_camPos);
 
-	for (auto iter = fireballs.begin(); iter != fireballs.end(); iter++)
+	for (auto iter = m_fireballs.begin(); iter != m_fireballs.end(); iter++)
 	{
-		iter->Draw(camPos);
+		iter->Draw(m_camPos);
 	}
 
 
@@ -89,24 +107,26 @@ void Game::Draw()
 
 void Game::DrawUI()
 {
-	minimap.Draw(map.Vector2ToNode(player.position));
+	m_minimap.Draw(m_map.Vector2ToNode(m_player.position));
 }
 
 void Game::PhysicStep()
 {
 	//CheckMapCollisions
-	CheckMapCollisions(&player, true);
+	CheckMapCollisions(&m_player, true);
 	
-	auto iter = fireballs.begin();
-	while (iter != fireballs.end())
+	auto iter = m_fireballs.begin();
+	while (iter != m_fireballs.end())
 	{
-		if(!CheckMapCollisions(&*iter, false))
+		if(iter->Casting() || !CheckMapCollisions(&*iter, false))
 		{
 			iter++;
 			continue;
 		}
 
-		iter = fireballs.erase(iter);
+		if (&m_fireballs.back() == &*iter)
+			StopSound(m_fireballcast);
+		iter = m_fireballs.erase(iter);
 	}
 }
 
@@ -148,14 +168,14 @@ bool Game::CheckMapCollisions(HitBoxObject* obj, bool resolve)
 			break;
 		}
 
-		direction = direction + map.Vector2ToNode(obj->Hitbox()->position);
-		int index = direction.x + direction.y * map.Size().x;
-		if (index < 0 || index >= map.Size().x * map.Size().y) continue;
-		if (map[index] != Map::Tile::wall) continue;
+		direction = direction + m_map.Vector2ToNode(obj->Hitbox()->position);
+		int index = direction.x + direction.y * m_map.Size().x;
+		if (index < 0 || index >= m_map.Size().x * m_map.Size().y) continue;
+		if (m_map[index] != Map::Tile::wall) continue;
 
 		AABB tileAABB = AABB();
-		tileAABB.position = v2(direction.x * map.CellSize() + map.CellSize() / 2, direction.y * map.CellSize() + map.CellSize() / 2);
-		tileAABB.size = v2(map.CellSize());
+		tileAABB.position = v2(direction.x * m_map.CellSize() + m_map.CellSize() / 2, direction.y * m_map.CellSize() + m_map.CellSize() / 2);
+		tileAABB.size = v2(m_map.CellSize());
 
 		if (!resolve)
 		{
@@ -176,12 +196,22 @@ bool Game::CheckMapCollisions(HitBoxObject* obj, bool resolve)
 }
 
 
-void Game::ShootFireBall()
+void Game::CastFireBall()
 {
+	m_casting = true;
+	m_castingTimer = 0;
+	PlaySound(m_fireballcast);
+
 	v2 direction = v2();
 	direction.x = GetMousePosition().x - WINDOWX / 2;
 	direction.y = GetMousePosition().y - WINDOWY / 2;
 	direction = direction.Normalized();
 
-	fireballs.push_back(FireBall(player.position, direction));
+	m_fireballs.push_back(FireBall(true, m_player.position, direction));
+}
+
+void Game::ShootFireBall()
+{
+	m_casting = false;
+	m_fireballs.back().Fire();
 }
