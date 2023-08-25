@@ -105,6 +105,6 @@ void Player::Draw(v2 camPos)
 	float playerWidth = m_textures[static_cast<int>(m_direction)].width * scale;
 	float playerHeight = m_textures[static_cast<int>(m_direction)].height * scale;
 
-	Vector2 texturePos = Vector2{ float(WINDOWX / 2 - (playerWidth / 2)), float(WINDOWY / 2 - (playerHeight / 2)) };
+	Vector2 texturePos = Vector2{ float(position.x - camPos.x - (playerWidth / 2)), float(position.y - camPos.y - (playerHeight / 2))};
 	DrawTextureEx(m_textures[static_cast<int>(m_direction)], texturePos, 0, scale, Color{ 255, 255, 255, 255 });
 }
