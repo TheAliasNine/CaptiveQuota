@@ -7,7 +7,10 @@ protected:
 	AppState* nextState = nullptr;
 
 public:
-	virtual void Draw() = 0;
+
+	virtual ~AppState() = default;
+
+	virtual void Draw(float) = 0;
 	virtual void Update(float) = 0;
 
 	bool Closed() { return closed; }

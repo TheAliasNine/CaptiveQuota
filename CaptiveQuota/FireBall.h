@@ -18,7 +18,7 @@ private:
 	v2 m_direction;
 	float m_timer = 0;
 	bool m_casting;
-	float m_castingProgress;
+	float m_castingProgress = 0;
 
 public:
 	FireBall() = default;

@@ -21,6 +21,10 @@ public:
 		Right,
 		Cast,
 		OpenMenu,
+		Restart,
+		Exit,
+		Interact,
+		FreeCam,
 
 		KEYBINDLENGTH,
 	};

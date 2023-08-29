@@ -41,6 +41,15 @@
     <ClCompile Include="FireBall.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Explosion.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Exit.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Lever.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -101,6 +110,15 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="FireBall.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Explosion.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Exit.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Lever.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

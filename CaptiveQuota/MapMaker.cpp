@@ -226,6 +226,7 @@ void Map::MapMaker::AddRooms()
 		map->m_tiles[x + majorRooms[2].x + (y + majorRooms[2].y) * map->m_size.x] = Map::Tile::cell; // the cell entirely is covered with different flooring
 	}
 
+	map->m_portal = majorRooms[1];
 	//Create Exit -------------------------------------------------------------------------
 	map->m_playerSpawn = majorRooms[0];
 	intV2 direction = intV2();

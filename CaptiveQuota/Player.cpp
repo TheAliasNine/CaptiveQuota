@@ -19,6 +19,7 @@ Player::Player()
 	aabb->size = v2((m_textures[0].width - 60) * scale, (m_textures[0].height / 2) * scale);
 	m_hitbox = aabb;
 }
+
 #pragma region Rule of 5
 Player::~Player()
 {

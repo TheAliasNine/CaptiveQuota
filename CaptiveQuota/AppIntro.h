@@ -17,7 +17,7 @@ public:
 
 	AppIntro();
 
-	void Draw();
+	void Draw(float deltaTime);
 
 	void Update(float deltaTime);
 

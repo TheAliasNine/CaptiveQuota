@@ -4,7 +4,7 @@
 
 #include "raymath.h"
 
-const float FireBall::speed = 1000;
+const float FireBall::speed = 1200;
 const float FireBall::animationTime = 0.2f;
 const float FireBall::scale = 3;
 const float FireBall::castOffSet = 50;
@@ -12,6 +12,7 @@ const float FireBall::castOffSet = 50;
 
 FireBall::FireBall(bool casting, v2 position, v2 direction)
 {
+	m_casting = casting;
 	for (int i = 0; i < frameCount; i++)
 	{
 		m_animationFrames[i] = LoadTexture(TextFormat("Assets\\Images\\FireBall%i.png", i));
@@ -46,6 +47,7 @@ FireBall::FireBall(const FireBall& other)
 
 	Circle* hitbox = new Circle(*static_cast<Circle*>(other.m_hitbox));
 	m_hitbox = hitbox;
+	m_casting = other.m_casting;
 }
 
 FireBall& FireBall::operator= (const FireBall& other)
@@ -55,6 +57,8 @@ FireBall& FireBall::operator= (const FireBall& other)
 
 	Circle* hitbox = new Circle(*static_cast<Circle*>(other.m_hitbox));
 	m_hitbox = hitbox;
+	m_casting = other.m_casting;
+
 	return *this;
 }
 
@@ -70,6 +74,7 @@ FireBall::FireBall(FireBall&& other)
 
 	m_hitbox = other.m_hitbox;
 	other.m_hitbox = nullptr;
+	m_casting = other.m_casting;
 }
 
 FireBall& FireBall::operator= (FireBall&& other)
@@ -79,6 +84,7 @@ FireBall& FireBall::operator= (FireBall&& other)
 
 	m_hitbox = other.m_hitbox;
 	other.m_hitbox = nullptr;
+	m_casting = other.m_casting;
 	return *this;
 }
 
@@ -99,7 +105,7 @@ void FireBall::Update(float deltaTime)
 }
 
 void FireBall::Draw(v2 camPos)
-{
+{ 
 	if (m_timer > animationTime) m_timer -= animationTime;
 
 	int frame = (int)(m_timer / (animationTime / frameCount));
@@ -142,6 +148,6 @@ void FireBall::Fire()
 void FireBall::UpdateCastingInfo(v2 position, v2 direction, float progress)
 {
 	this->position = position;
-	m_direction = direction;
+	m_direction = direction != v2() ? direction : v2(1, 0);
 	m_castingProgress = progress;
 }

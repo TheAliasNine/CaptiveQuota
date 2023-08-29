@@ -49,7 +49,7 @@ void MainMenu::Update(float deltaTime)
 	}
 }
 
-void MainMenu::Draw()
+void MainMenu::Draw(float deltaTime)
 {
 	ClearBackground(DARKGRAY);
 	switch (state)

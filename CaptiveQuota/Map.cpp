@@ -2,6 +2,7 @@
 
 #include "raylib.h"
 
+const float Map::exitOpenTime = 5;
 
 Map::Map()
 {
@@ -31,6 +32,9 @@ Map::Map()
 	m_textures[static_cast<int>(Tile::path)] = LoadTexture("Assets\\Images\\Path.png");
 	m_textures[static_cast<int>(Tile::vault)] = LoadTexture("Assets\\Images\\Vault.png");
 	m_textures[static_cast<int>(Tile::wall)] = LoadTexture("Assets\\Images\\Wall.png");
+	m_doorClose = LoadSound("Assets\\Sound\\DoorClose.mp3");
+	m_doorOpen = LoadSound("Assets\\Sound\\DoorOpen.mp3");
+
 }
 
 #pragma region Rule of Five
@@ -40,6 +44,8 @@ Map::~Map()
 	{
 		UnloadTexture(m_textures[i]);
 	}
+	UnloadSound(m_doorClose);
+	UnloadSound(m_doorOpen);
 	delete[] m_tiles;
 }
 
@@ -63,6 +69,9 @@ Map::Map(const Map& other)
 	{
 		m_textures[i] = other.m_textures[i];
 	}
+
+	m_doorClose = LoadSound("Assets\\Sound\\DoorClose.mp3");
+	m_doorOpen = LoadSound("Assets\\Sound\\DoorOpen.mp3");
 }
 
 Map& Map::operator= (const Map& other)
@@ -105,6 +114,9 @@ Map::Map(Map&& other)
 	{
 		m_textures[i] = other.m_textures[i];
 	}
+
+	m_doorClose = LoadSound("Assets\\Sound\\DoorClose.mp3");
+	m_doorOpen = LoadSound("Assets\\Sound\\DoorOpen.mp3");
 }
 
 Map& Map::operator= (Map&& other)
@@ -138,6 +150,20 @@ void Map::CreateMap(unsigned int seed)
 	mapMaker.MakeMap();
 }
 
+void Map::Update(float deltaTime)
+{
+	if (m_exitOpen)
+	{
+		m_exitTimer += deltaTime;
+		if (m_exitTimer >= exitOpenTime)
+		{
+			m_exitOpen = false;
+			m_exitTimer = 0;
+			PlaySound(m_doorClose);
+		}
+	}
+}
+
 void Map::DrawTiles(v2 camPos)
 {
 	v2 centreScreen = camPos;
@@ -167,15 +193,20 @@ void Map::DrawTiles(v2 camPos)
 	{
 		DrawCircle(m_cellSize * m_keyMolds[i].x - camPos.x + float (m_cellSize) / 2, m_cellSize * m_keyMolds[i].y - camPos.y + float(m_cellSize) / 2, (float)m_cellSize / 2, RED);
 	}
-	for (int i = 0; i < leverRoomCount; i++)
-	{
-		DrawCircle(m_cellSize * m_levers[i].x - camPos.x + float(m_cellSize) / 2, m_cellSize * m_levers[i].y - camPos.y + float(m_cellSize) / 2, (float)m_cellSize / 2, BLUE);
-	}
 }
 
 
 intV2 Map::LeverPos(int index) { return m_levers[index]; }
 
+bool Map::IsLeverActive(intV2 position)
+{
+	for (int i = 0; i < leverRoomCount; i++)
+	{
+		if (position != m_levers[i]) continue;
+		return m_leverActive[i];
+	}
+	return false;
+}
 void Map::ActivateLever(intV2 position)
 {
 	for (int i = 0; i < leverRoomCount; i++)
@@ -216,4 +247,15 @@ void Map::SetCellSize(int size) { m_cellSize = size; }
 intV2 Map::Vector2ToNode(v2 vector)
 {
 	return intV2{ int(vector.x) / m_cellSize, int(vector.y) / m_cellSize };
+}
+
+v2 Map::NodeToVector2(intV2 node)
+{
+	return v2(node.x * m_cellSize + m_cellSize / 2, node.y * m_cellSize + m_cellSize / 2);
+}
+
+void Map::UnlockExit()
+{
+	m_exitOpen = true;
+	PlaySound(m_doorOpen);
 }

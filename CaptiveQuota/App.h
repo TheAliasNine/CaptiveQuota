@@ -10,6 +10,7 @@ class App
 
 	AppState* state = nullptr;
 
+	float m_deltaTime;
 
 	std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
 

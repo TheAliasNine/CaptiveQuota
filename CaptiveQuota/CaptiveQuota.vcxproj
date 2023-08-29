@@ -183,9 +183,12 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="AppIntro.cpp" />
     <ClCompile Include="Circle.cpp" />
+    <ClCompile Include="Exit.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Lever.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -199,6 +202,8 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClInclude Include="App.h" />
     <ClInclude Include="AppIntro.h" />
     <ClInclude Include="AppState.h" />
+    <ClInclude Include="Exit.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="HitBoxObject.h" />
     <ClInclude Include="Button.h" />
@@ -209,6 +214,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClInclude Include="Game.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="intV2.h" />
+    <ClInclude Include="Lever.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Minimap.h" />

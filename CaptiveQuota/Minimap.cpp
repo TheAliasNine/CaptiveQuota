@@ -186,46 +186,55 @@ void Minimap::DiscoverTile(intV2 pos)
 	for (int i = 0; i < 9; i++)
 	{
 		int index = 0;
+		intV2 discoverPos = pos;
 		switch (i)
 		{
 		case(0):
-			index = pos.x + pos.y * m_mapSize.x;
 			break;
 		case(1):
-			index = pos.x - 1 + pos.y * m_mapSize.x;
+			discoverPos.x -= 1;
 			break;
 		case(2):
-			index = pos.x + 1 + pos.y * m_mapSize.x;
+			discoverPos.x += 1;
 			break;
 		case(3):
-			index = pos.x + (pos.y + 1) * m_mapSize.x;
+			discoverPos.y += 1;
 			break;
 		case(4):
-			index = pos.x - 1 + (pos.y + 1) * m_mapSize.x;
+			discoverPos.y -= 1;
 			break;
 		case(5):
-			index = pos.x + 1 + (pos.y + 1) * m_mapSize.x;
+			discoverPos.x += 1;
+			discoverPos.y += 1;
 			break;
 		case(6):
-			index = pos.x + (pos.y - 1) * m_mapSize.x;
+			discoverPos.x += 1;
+			discoverPos.y -= 1;
 			break;
 		case(7):
-			index = pos.x - 1 + (pos.y - 1) * m_mapSize.x;
+			discoverPos.x -= 1;
+			discoverPos.y += 1;
 			break;
 		case(8):
-			index = pos.x + 1 + (pos.y - 1) * m_mapSize.x;
+			discoverPos.x -= 1;
+			discoverPos.y -= 1;
 			break;
 		}
+
+		if (discoverPos.x < 0 || discoverPos.x >= m_mapSize.x || discoverPos.y < 0 || discoverPos.y >= m_mapSize.y)
+			continue;
+		index = discoverPos.x + discoverPos.y * m_mapSize.x;
+
 		if (m_discovered[index]) continue;
 		changed = true;
 		m_discovered[index] = true;
 
 
 
-		if (pos.x - 1 < m_knownMin.x) m_knownMin.x = pos.x - 1;
-		if (pos.y - 1 < m_knownMin.y) m_knownMin.y = pos.y - 1;
-		if (pos.x + 1 > m_knownMax.x) m_knownMax.x = pos.x + 1;
-		if (pos.y + 1 > m_knownMax.y) m_knownMax.y = pos.y + 1;
+		if (discoverPos.x < m_knownMin.x) m_knownMin.x = discoverPos.x - 1;
+		if (discoverPos.y < m_knownMin.y) m_knownMin.y = discoverPos.y - 1;
+		if (discoverPos.x > m_knownMax.x) m_knownMax.x = discoverPos.x + 1;
+		if (discoverPos.y > m_knownMax.y) m_knownMax.y = discoverPos.y + 1;
 	}
 
 	if (!changed) return;
@@ -280,6 +289,10 @@ void Minimap::Draw(intV2 playerPos)
 	DrawTexture(m_mapTexture, miniMapX, miniMapY, WHITE);
 	
 	//draw player
+	if (playerPos.x < m_knownMin.x) playerPos.x = m_knownMin.x;
+	if (playerPos.x > m_knownMax.x) playerPos.x = m_knownMax.x;
+	if (playerPos.y < m_knownMin.y) playerPos.y = m_knownMin.y;
+	if (playerPos.y > m_knownMax.y) playerPos.y = m_knownMax.y;
 	intV2 mapRange = m_knownMax - m_knownMin;
 	mapRange.x += 1;
 	mapRange.y += 1;

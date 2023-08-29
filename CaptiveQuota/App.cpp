@@ -38,8 +38,8 @@ void App::Update()
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 	std::chrono::duration<float> deltaTime = now - lastTime;
 	lastTime = now;
-
-	state->Update(deltaTime.count());
+	m_deltaTime = deltaTime.count();
+	state->Update(m_deltaTime);
 	if (state->Closed())
 	{
 		AppState* nextState = state->NextState();
@@ -54,7 +54,7 @@ void App::Draw()
 {
 	if (!running) return;
 	BeginDrawing();
-	state->Draw();
+	state->Draw(m_deltaTime);
 	EndDrawing();
 }
 

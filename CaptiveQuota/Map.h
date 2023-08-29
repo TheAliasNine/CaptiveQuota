@@ -19,6 +19,8 @@ public:
 
 	void CreateMap(unsigned int seed);
 
+	void Update(float deltaTime);
+
 	void DrawTiles(v2 camPos);
 
 	enum class Tile
@@ -41,17 +43,23 @@ public:
 	
 	intV2 PlayerSpawn() { return m_playerSpawn; }
 	intV2 Exit() { return m_exit; }
+	bool ExitOpen() { return m_exitOpen; }
+	void UnlockExit();
 
 	int LeverCount() { return leverRoomCount; };
 	intV2 LeverPos(int index);
+	bool IsLeverActive(intV2 position);
 	void ActivateLever(intV2 position);
 	void DeactivateLever(intV2 position);
 
 	bool IsPortalActive();
+	intV2 PortalPosition() { return m_portal; }
+
 	int CellSize();
 	void SetCellSize(int size);
 
 	intV2 Vector2ToNode(v2 vector);
+	v2 NodeToVector2(intV2 node);
 
 private:
 
@@ -78,6 +86,9 @@ private:
 	Tile* m_tiles;
 
 	intV2 m_exit;
+	bool m_exitOpen;
+	static const float exitOpenTime;
+	float m_exitTimer = 0;
 	intV2 m_playerSpawn;
 
 	intV2 m_cellMax;
@@ -94,6 +105,9 @@ private:
 	int m_cellSize = 100;
 
 	Texture2D m_textures[static_cast<int>(Tile::TILECOUNT)];
+
+	Sound m_doorOpen;
+	Sound m_doorClose;
 
 #pragma endregion
 

@@ -43,6 +43,10 @@ void InputManager::KeyBinds::LoadDefaults()
 	binds[Left].key = KEY_A;
 	binds[Right].key = KEY_D;
 	binds[Cast].key = MOUSE_LEFT_BUTTON;
+	binds[Restart].key = KEY_R;
+	binds[Exit].key = KEY_ESCAPE;
+	binds[Interact].key = MOUSE_RIGHT_BUTTON;
+	binds[FreeCam].key = KEY_F;
 }
 
 bool InputManager::KeyBinds::LoadByFile()
