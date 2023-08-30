@@ -243,6 +243,9 @@ void Map::MapMaker::AddRooms()
 	map->m_tiles[map->m_exit.x + map->m_exit.y * map->m_size.x] = Map::Tile::exit;
 	//-------------------------------------------------------------------------------------
 
+	map->m_cellMin = intV2{ majorRooms[2].x - majorRoomSize, majorRooms[2].y - majorRoomSize };
+	map->m_cellMax = intV2{ majorRooms[2].x + majorRoomSize, majorRooms[2].y + majorRoomSize };
+
 	int totalKeyRoomSize = 2 * keyRoomSize + 1;
 	for (int room = 0; room < keyRoomCount; room++)
 	{

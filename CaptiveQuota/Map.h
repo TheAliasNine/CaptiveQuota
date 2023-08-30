@@ -46,6 +46,9 @@ public:
 	bool ExitOpen() { return m_exitOpen; }
 	void UnlockExit();
 
+	intV2 PrisonCellMin() { return m_cellMin; }
+	intV2 PrisonCellMax() { return m_cellMax; };
+
 	int KeyMakerCount() { return keyRoomCount; }
 	intV2 KeyMakerPos(int index);
 

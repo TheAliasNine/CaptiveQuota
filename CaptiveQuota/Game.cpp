@@ -5,6 +5,8 @@
 
 #include "InputManager.h"
 
+#include <random>
+
 
 const float Game::castTime = 0.5f;
 const float Game::portalAnimTime = 0.7f;
@@ -13,6 +15,8 @@ const float Game::portalScale = 4;
 Game::Game()
 {
 	music = LoadMusicStream("Assets\\Sound\\MainMusic.ogg");
+
+
 	PlayMusicStream(music);
 
 	m_map.CreateMap(std::time(nullptr));
@@ -22,6 +26,15 @@ Game::Game()
 
 	m_player.position = v2(m_map.PlayerSpawn().x, m_map.PlayerSpawn().y) * m_map.CellSize();
 	m_camPos = m_player.position - v2(WINDOWX / 2, WINDOWY / 2);
+
+	m_captives.reserve(captiveCount);
+	for (int i = 0; i < captiveCount; i++)
+	{
+		intV2 capPosition = intV2();
+		capPosition.x = std::rand() % (m_map.PrisonCellMax().x - m_map.PrisonCellMin().x) + m_map.PrisonCellMin().x;
+		capPosition.y = std::rand() % (m_map.PrisonCellMax().y - m_map.PrisonCellMin().y) + m_map.PrisonCellMin().y;
+		m_captives.push_back(Captive(m_map.NodeToVector2(capPosition)));
+	}
 
 	m_exitObj = Exit(&m_map);
 
@@ -199,7 +212,10 @@ void Game::Draw(float deltaTime)
 		}
 	}
 
-	
+	for (auto iter = m_captives.begin(); iter < m_captives.end(); iter++)
+	{
+		iter->Draw(m_camPos);
+	}
 
 	m_player.Draw(m_camPos);
 
@@ -273,7 +289,7 @@ void Game::PhysicStep()
 	auto iter = m_fireballs.begin();
 	while (iter != m_fireballs.end())
 	{
-		if(iter->Casting() || !CheckMapCollisions(&*iter, false))
+		if(iter->Casting() || (!CheckMapCollisions(&*iter, false) && !CheckCaptiveCollisions(&*iter, false)))
 		{
 			iter++;
 			continue;
@@ -282,6 +298,15 @@ void Game::PhysicStep()
 		if (&m_fireballs.back() == &*iter)
 			StopSound(m_fireballcast);
 		iter = m_fireballs.erase(iter);
+	}
+
+	for (auto iter = m_captives.begin(); iter != m_captives.end(); iter++)
+	{
+		if (!iter->Alive()) 
+			continue;
+		CheckMapCollisions(&*iter, true);
+		if (!CheckExplosionCollisions(&*iter, false)) continue;
+		iter->Kill();
 	}
 }
 
@@ -410,6 +435,60 @@ bool Game::CheckMapCollisions(HitBoxObject* obj, bool resolve)
 
 
 	obj->position = obj->position + hitboxOffset;
+	return hitboxOffset.x != 0 || hitboxOffset.y != 0;
+}
+
+bool Game::CheckCaptiveCollisions(HitBoxObject* obj, bool resolve)
+{
+	v2 hitboxOffset = v2();
+	for (auto iter = m_captives.begin(); iter != m_captives.end(); iter++)
+	{
+		if (!iter->Alive()) continue;
+		if (resolve)
+		{
+			CollisionInfo info = CollisionInfo();
+			Collider* hitbox = obj->Hitbox();
+			hitbox->position = hitbox->position + hitboxOffset;
+			bool collided = hitbox->CheckCollision(iter->Hitbox(), &info);
+			if (collided)
+			{
+				hitboxOffset = hitboxOffset + info.depth * info.direction;
+			}
+		}
+		else
+		{
+			Collider* hitbox = obj->Hitbox();
+			hitbox->position = hitbox->position + hitboxOffset;
+			if (hitbox->CheckCollision(iter->Hitbox(), nullptr))
+				return true;
+		}
+	}
+	return hitboxOffset.x != 0 || hitboxOffset.y != 0;
+}
+bool Game::CheckExplosionCollisions(HitBoxObject* obj, bool resolve)
+{
+	v2 hitboxOffset = v2();
+	for (auto iter = m_explosions.begin(); iter != m_explosions.end(); iter++)
+	{
+		if (resolve)
+		{
+			CollisionInfo info = CollisionInfo();
+			Collider* hitbox = obj->Hitbox();
+			hitbox->position = hitbox->position + hitboxOffset;
+			bool collided = hitbox->CheckCollision(iter->Hitbox(), &info);
+			if (collided)
+			{
+				hitboxOffset = hitboxOffset + info.depth * info.direction;
+			}
+		}
+		else
+		{
+			Collider* hitbox = obj->Hitbox();
+			hitbox->position = hitbox->position + hitboxOffset;
+			if (hitbox->CheckCollision(iter->Hitbox(), nullptr))
+				return true;
+		}
+	}
 	return hitboxOffset.x != 0 || hitboxOffset.y != 0;
 }
 

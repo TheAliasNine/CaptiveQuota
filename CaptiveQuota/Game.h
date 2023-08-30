@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AppState.h"
+#include "Captive.h"
 #include "Exit.h"
 #include "Explosion.h"
 #include "FireBall.h"
@@ -32,6 +33,8 @@ class Game : public AppState
 
 	std::vector<Lever> m_levers;
 	std::vector<KeyMaker> m_keyMakers;
+	static const int captiveCount = 10;
+	std::vector<Captive> m_captives;
 
 	Exit m_exitObj;
 
@@ -58,6 +61,8 @@ class Game : public AppState
 	void PhysicStep();
 
 	bool CheckMapCollisions(HitBoxObject* obj, bool resolve);
+	bool CheckCaptiveCollisions(HitBoxObject* obj, bool resolve);
+	bool CheckExplosionCollisions(HitBoxObject* obj, bool resolve);
 
 	void DrawBackground();
 	void DrawUI();
