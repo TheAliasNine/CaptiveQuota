@@ -188,6 +188,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="KeyMaker.cpp" />
     <ClCompile Include="Lever.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
@@ -214,6 +215,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClInclude Include="Game.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="intV2.h" />
+    <ClInclude Include="KeyMaker.h" />
     <ClInclude Include="Lever.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Map.h" />

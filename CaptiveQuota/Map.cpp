@@ -189,10 +189,6 @@ void Map::DrawTiles(v2 camPos)
 			DrawTextureEx(m_textures[static_cast<int>(m_tiles[x + y * m_size.x])], position, 0, scale, WHITE);
 		}
 	}
-	for (int i = 0; i < keyRoomCount; i++)
-	{
-		DrawCircle(m_cellSize * m_keyMolds[i].x - camPos.x + float (m_cellSize) / 2, m_cellSize * m_keyMolds[i].y - camPos.y + float(m_cellSize) / 2, (float)m_cellSize / 2, RED);
-	}
 }
 
 
@@ -258,4 +254,9 @@ void Map::UnlockExit()
 {
 	m_exitOpen = true;
 	PlaySound(m_doorOpen);
+}
+
+intV2 Map::KeyMakerPos(int index)
+{
+	return m_keyMolds[index];
 }

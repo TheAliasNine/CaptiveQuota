@@ -12,6 +12,9 @@ const float Game::portalScale = 4;
 
 Game::Game()
 {
+	music = LoadMusicStream("Assets\\Sound\\MainMusic.ogg");
+	PlayMusicStream(music);
+
 	m_map.CreateMap(std::time(nullptr));
 	m_map.SetCellSize(100);
 
@@ -47,6 +50,11 @@ Game::Game()
 	{
 		m_levers.push_back(Lever(&m_map, i));
 	}
+	m_keyMakers.reserve(m_map.KeyMakerCount());
+	for (int i = 0; i < m_map.KeyMakerCount(); i++)
+	{
+		m_keyMakers.push_back(KeyMaker(&m_map, i));
+	}
 }
 
 Game::~Game()
@@ -59,10 +67,15 @@ Game::~Game()
 	{
 		UnloadTexture(m_portalFrame[i]);
 	}
+
+	StopMusicStream(music);
+	UnloadMusicStream(music);
 }
 
 void Game::Update(float deltaTime)
 {
+	UpdateMusicStream(music);
+
 	if (m_gameFinished)
 	{
 		if (InputManager::KeyDown(InputManager::Restart))
@@ -141,7 +154,14 @@ void Game::Update(float deltaTime)
 		iter->Update(deltaTime);
 	}
 
-	if (InputManager::KeyDown(InputManager::Interact)) Interact();
+	if (InputManager::KeyDown(InputManager::Interact))
+	{
+		for (auto iter = m_levers.begin(); iter != m_levers.end(); iter++)
+		{
+			if (!iter->Hitbox()->CheckCollision(m_camPos + v2(GetMouseX(), GetMouseY()))) continue;
+			iter->TurnOff();
+		}
+	}
 
 	PhysicStep();
 }
@@ -158,6 +178,10 @@ void Game::Draw(float deltaTime)
 	{
 		iter->Draw(m_camPos);
 	}
+	for (auto iter = m_keyMakers.begin(); iter != m_keyMakers.end(); iter++)
+	{
+		iter->Draw(m_camPos);
+	}
 
 	if (m_map.IsPortalActive())
 	{
@@ -167,7 +191,7 @@ void Game::Draw(float deltaTime)
 		v2 halfFrameDimensions = v2(m_portalFrame[frame].width / 2 * portalScale, m_portalFrame[frame].height / 2 * portalScale);
 		v2 drawPos = m_map.NodeToVector2(m_map.PortalPosition()) - m_camPos - halfFrameDimensions;
 
-		if ((drawPos.x + halfFrameDimensions.x > 0 && drawPos.x - halfFrameDimensions.x < WINDOWX) && (drawPos.y + halfFrameDimensions.y > 0 && drawPos.y - halfFrameDimensions.y < WINDOWY))
+		if ((drawPos.x + halfFrameDimensions.x > 0 || drawPos.x - halfFrameDimensions.x < WINDOWX) && (drawPos.y + halfFrameDimensions.y > 0 || drawPos.y - halfFrameDimensions.y < WINDOWY))
 		{
 			Vector2 position = Vector2{ drawPos.x, drawPos.y };
 
@@ -339,6 +363,49 @@ bool Game::CheckMapCollisions(HitBoxObject* obj, bool resolve)
 		Collider* hitbox = obj->Hitbox();
 		hitbox->position = hitbox->position + hitboxOffset;
 		if (hitbox->CheckCollision(m_exitObj.Hitbox(), nullptr)) return true;
+	}
+	//levers
+	for (auto iter = m_levers.begin(); iter != m_levers.end(); iter++)
+	{
+		if (resolve)
+		{
+			CollisionInfo info = CollisionInfo();
+			Collider* hitbox = obj->Hitbox();
+			hitbox->position = hitbox->position + hitboxOffset;
+			bool collided = hitbox->CheckCollision(iter->Hitbox(), &info);
+			if (collided)
+			{
+				hitboxOffset = hitboxOffset + info.depth * info.direction;
+			}
+		}
+		else
+		{
+			Collider* hitbox = obj->Hitbox();
+			hitbox->position = hitbox->position + hitboxOffset;
+			if (hitbox->CheckCollision(iter->Hitbox(), nullptr)) return true;
+		}
+	}
+
+	//KeyMakers
+	for (auto iter = m_keyMakers.begin(); iter != m_keyMakers.end(); iter++)
+	{
+		if (resolve)
+		{
+			CollisionInfo info = CollisionInfo();
+			Collider* hitbox = obj->Hitbox();
+			hitbox->position = hitbox->position + hitboxOffset;
+			bool collided = hitbox->CheckCollision(iter->Hitbox(), &info);
+			if (collided)
+			{
+				hitboxOffset = hitboxOffset + info.depth * info.direction;
+			}
+		}
+		else
+		{
+			Collider* hitbox = obj->Hitbox();
+			hitbox->position = hitbox->position + hitboxOffset;
+			if (hitbox->CheckCollision(iter->Hitbox(), nullptr)) return true;
+		}
 	}
 
 

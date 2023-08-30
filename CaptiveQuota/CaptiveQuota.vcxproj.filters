@@ -50,6 +50,9 @@
     <ClCompile Include="Lever.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="KeyMaker.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -119,6 +122,9 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Lever.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyMaker.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

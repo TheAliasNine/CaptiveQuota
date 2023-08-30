@@ -46,6 +46,9 @@ public:
 	bool ExitOpen() { return m_exitOpen; }
 	void UnlockExit();
 
+	int KeyMakerCount() { return keyRoomCount; }
+	intV2 KeyMakerPos(int index);
+
 	int LeverCount() { return leverRoomCount; };
 	intV2 LeverPos(int index);
 	bool IsLeverActive(intV2 position);

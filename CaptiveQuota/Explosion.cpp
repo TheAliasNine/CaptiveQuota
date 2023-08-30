@@ -28,7 +28,7 @@ Explosion::Explosion(const Explosion& other)
 	m_timer = other.m_timer;
 	for (int i = 0; i < frameCount; i++)
 	{
-		m_animFrames[i] = LoadTexture(FormatText("Assets\\Images\\Exploaion%i", i));
+		m_animFrames[i] = LoadTexture(FormatText("Assets\\Images\\Explosion%i", i));
 	}
 	if (other.m_hitbox != nullptr)
 		m_hitbox = new Circle(*static_cast<Circle*>(other.m_hitbox));

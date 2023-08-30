@@ -4,6 +4,7 @@
 #include "Exit.h"
 #include "Explosion.h"
 #include "FireBall.h"
+#include "KeyMaker.h"
 #include "Lever.h"
 #include "Map.h"
 #include "Minimap.h"
@@ -18,6 +19,8 @@
 
 class Game : public AppState
 {
+	Music music;
+
 	Map m_map;
 	Minimap m_minimap;
 	
@@ -28,6 +31,7 @@ class Game : public AppState
 	std::list<Explosion> m_explosions;
 
 	std::vector<Lever> m_levers;
+	std::vector<KeyMaker> m_keyMakers;
 
 	Exit m_exitObj;
 
