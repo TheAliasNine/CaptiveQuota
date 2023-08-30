@@ -31,7 +31,6 @@ Captive::~Captive()
 {
 	UnloadTexture(m_txtrAlive);
 	UnloadTexture(m_txtrDead);
-	delete m_hitbox;
 }
 Captive::Captive(const Captive& other)
 {

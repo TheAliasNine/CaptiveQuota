@@ -87,6 +87,17 @@ Game::~Game()
 
 void Game::Update(float deltaTime)
 {
+	if (m_captives.size() < winCaptiveKills)
+		GameFinished(false);
+	int killCount = 0;
+	for (auto iter = m_captives.begin(); iter != m_captives.end(); iter++)
+	{
+		if (!iter->Alive())
+			killCount++;
+	}
+	if (killCount >= winCaptiveKills)
+		GameFinished(true);
+
 	UpdateMusicStream(music);
 
 	if (m_gameFinished)

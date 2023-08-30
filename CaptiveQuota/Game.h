@@ -33,7 +33,8 @@ class Game : public AppState
 
 	std::vector<Lever> m_levers;
 	std::vector<KeyMaker> m_keyMakers;
-	static const int captiveCount = 10;
+	static const int captiveCount = 15;
+	static const int winCaptiveKills = 8;
 	std::vector<Captive> m_captives;
 
 	Exit m_exitObj;

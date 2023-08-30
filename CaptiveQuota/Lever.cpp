@@ -156,5 +156,3 @@ void Lever::TurnOn()
 	PlaySound(m_leverOn);
 	m_map->ActivateLever(m_leverPos);
 }
-
-//TODO: then do theme music and key mold
