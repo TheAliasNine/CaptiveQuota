@@ -2,7 +2,7 @@
 
 #include "raylib.h"
 
-const float Map::exitOpenTime = 5;
+const float Map::exitOpenTime = 0.5f;
 
 Map::Map()
 {
@@ -259,4 +259,23 @@ void Map::UnlockExit()
 intV2 Map::KeyMakerPos(int index)
 {
 	return m_keyMolds[index];
+}
+
+bool Map::CheckLineOfSight(v2 from, v2 to, float range)
+{
+	float magnitude = (to - from).Magnitude();
+	v2 direction = (to - from) / magnitude;
+
+	if (range >= 0 && magnitude > range)
+		return false;
+
+	for (float check = 0; check <= magnitude; check += m_cellSize)
+	{
+		v2 checkPos = from + direction * check;
+		intV2 node = Vector2ToNode(checkPos);
+		int tileInd = node.x + node.y * m_size.x;
+		if (m_tiles[tileInd] == Tile::wall)
+			return false;
+	}
+	return true;
 }

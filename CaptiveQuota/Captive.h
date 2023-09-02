@@ -1,8 +1,9 @@
 #pragma once
 
-#include "HitBoxObject.h"
-
 #include "AABB.h"
+#include "HitBoxObject.h"
+#include "Player.h"
+#include "Map.h"
 
 #include "raylib.h"
 
@@ -14,10 +15,16 @@ class Captive : public HitBoxObject
 
 	Texture2D m_txtrAlive;
 	Texture2D m_txtrDead;
+	bool m_haveKey;
 
 public:
+	static const float detectionRange;
+	Player* playerRef;
+	Map* mapRef;
+	intV2 m_goal;
+
 	Captive();
-	Captive(v2 position);
+	Captive(v2 position, Player* player, Map* map);
 	~Captive();
 	Captive(const Captive& other);
 	Captive& operator= (const Captive& other);
@@ -30,4 +37,6 @@ public:
 
 	void Kill();
 	bool Alive() { return m_alive; }
+
+	bool HaveKey() { return m_haveKey; }
 };

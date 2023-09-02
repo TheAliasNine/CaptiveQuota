@@ -15,7 +15,7 @@ const float Game::portalScale = 4;
 Game::Game()
 {
 	music = LoadMusicStream("Assets\\Sound\\MainMusic.ogg");
-
+	SetMusicVolume(music, 0.25f);
 
 	PlayMusicStream(music);
 
@@ -33,7 +33,7 @@ Game::Game()
 		intV2 capPosition = intV2();
 		capPosition.x = std::rand() % (m_map.PrisonCellMax().x - m_map.PrisonCellMin().x) + m_map.PrisonCellMin().x;
 		capPosition.y = std::rand() % (m_map.PrisonCellMax().y - m_map.PrisonCellMin().y) + m_map.PrisonCellMin().y;
-		m_captives.push_back(Captive(m_map.NodeToVector2(capPosition)));
+		m_captives.push_back(Captive(m_map.NodeToVector2(capPosition), &m_player, &m_map));
 	}
 
 	m_exitObj = Exit(&m_map);
@@ -41,7 +41,9 @@ Game::Game()
 	m_background = LoadTexture("Assets\\Images\\Background.png");
 
 	m_fireballcast = LoadSound("Assets\\Sound\\FireBallCast.mp3");
+	SetSoundVolume(m_fireballcast, 0.6f);
 	m_explosion = LoadSound("Assets\\Sound\\Explosion.wav");
+
 
 	for (int i = 0; i < portalFrames; i++)
 	{

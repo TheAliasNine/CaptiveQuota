@@ -133,6 +133,57 @@
     <ClInclude Include="Captive.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Decision.h">
+      <Filter>AI\DecisionTree</Filter>
+    </ClInclude>
+    <ClInclude Include="ABDecisionNode.h">
+      <Filter>AI\DecisionTree</Filter>
+    </ClInclude>
+    <ClInclude Include="CaptivePathGoalFinding.h">
+      <Filter>AI\Captives</Filter>
+    </ClInclude>
+    <ClInclude Include="AllLeversActive.h">
+      <Filter>AI\Captives\Questions</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckForPOIs.h">
+      <Filter>AI\Captives\Questions</Filter>
+    </ClInclude>
+    <ClInclude Include="Explore.h">
+      <Filter>AI\Captives\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="HaveKey.h">
+      <Filter>AI\Captives\Questions</Filter>
+    </ClInclude>
+    <ClInclude Include="KnowDoor.h">
+      <Filter>AI\Captives\Questions</Filter>
+    </ClInclude>
+    <ClInclude Include="KnowLastLever.h">
+      <Filter>AI\Captives\Questions</Filter>
+    </ClInclude>
+    <ClInclude Include="KnowPortalLocation.h">
+      <Filter>AI\Captives\Questions</Filter>
+    </ClInclude>
+    <ClInclude Include="LeversActive.h">
+      <Filter>AI\Captives\Questions</Filter>
+    </ClInclude>
+    <ClInclude Include="Runaway.h">
+      <Filter>AI\Captives\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="SeePlayer.h">
+      <Filter>AI\Captives\Questions</Filter>
+    </ClInclude>
+    <ClInclude Include="SetGoal.h">
+      <Filter>AI\Captives\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="GoToDoor.h">
+      <Filter>AI\Captives\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="GoToPortal.h">
+      <Filter>AI\Captives\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="GoToLever.h">
+      <Filter>AI\Captives\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="App">
@@ -155,6 +206,21 @@
     </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{dcd9dc11-29cd-47c3-8528-310fa944ecfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{005b7a71-fe75-4541-a775-ce53621d7267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\DecisionTree">
+      <UniqueIdentifier>{84286e7d-64e3-4da9-9dcb-34d9f7703d95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Captives">
+      <UniqueIdentifier>{cb4131d5-0659-4065-b7ca-13e6d3d4ed0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Captives\Actions">
+      <UniqueIdentifier>{f1681ec8-94ac-49c5-b39b-410d2f08e5d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Captives\Questions">
+      <UniqueIdentifier>{835698e8-81f1-43da-87eb-1749de13dc0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

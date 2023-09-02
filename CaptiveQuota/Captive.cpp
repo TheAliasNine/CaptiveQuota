@@ -12,7 +12,7 @@ Captive::Captive()
 	m_txtrAlive = LoadTexture("Assets\\Images\\Captive.png");
 	m_txtrDead = LoadTexture("Assets\\Images\\CaptiveCorpse.png");
 }
-Captive::Captive(v2 position)
+Captive::Captive(v2 position, Player* player, Map* map)
 {
 	this->position = position;
 	m_alive = true;
@@ -25,6 +25,9 @@ Captive::Captive(v2 position)
 	hitbox->size = v2(m_txtrAlive.width * scale, m_txtrAlive.height * scale);
 
 	m_hitbox = hitbox;
+
+	playerRef = player;
+	mapRef = map;
 }
 #pragma region Rule of 5
 Captive::~Captive()

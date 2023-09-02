@@ -67,6 +67,10 @@ public:
 	intV2 Vector2ToNode(v2 vector);
 	v2 NodeToVector2(intV2 node);
 
+	//returns if the positions have line of sight on each other
+	//enter negative value if infinite
+	bool CheckLineOfSight(v2 from, v2 to, float range);
+
 private:
 
 #pragma region MapMakingConstants

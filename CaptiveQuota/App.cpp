@@ -23,7 +23,6 @@ void App::Init()
 	InitWindow(WINDOWX, WINDOWY, "Captive Quota");
 	InitAudioDevice();
 	SetExitKey(0);
-	
 	state = new Game();
 }
 

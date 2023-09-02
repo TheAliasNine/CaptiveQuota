@@ -2,6 +2,7 @@
 
 #include "AppState.h"
 #include "Captive.h"
+#include "CaptivePathGoalFinding.h"
 #include "Exit.h"
 #include "Explosion.h"
 #include "FireBall.h"
@@ -36,6 +37,7 @@ class Game : public AppState
 	static const int captiveCount = 15;
 	static const int winCaptiveKills = 8;
 	std::vector<Captive> m_captives;
+	CaptivePathGoalFinding m_captiveAI = CaptivePathGoalFinding();
 
 	Exit m_exitObj;
 
