@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 
 #include "AABB.h"
 #include "HitBoxObject.h"
@@ -9,7 +9,7 @@
 
 class Captive : public HitBoxObject
 {
-	static const float scale;
+	static const float c_scale;
 
 	bool m_alive;
 
@@ -18,9 +18,9 @@ class Captive : public HitBoxObject
 	bool m_haveKey;
 
 public:
-	static const float detectionRange;
-	Player* playerRef;
-	Map* mapRef;
+	static const float c_detectionRange;
+	Player* p_player;
+	Map* p_map;
 	intV2 m_goal;
 
 	Captive();

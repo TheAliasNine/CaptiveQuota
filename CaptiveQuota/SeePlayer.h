@@ -10,7 +10,7 @@ class SeePlayer : public ABDecisionNode<Captive>
 protected:
 	virtual bool Condition(Captive& captive) override
 	{
-		return captive.mapRef->CheckLineOfSight(captive.position, captive.playerRef->position, captive.detectionRange);
+		return captive.p_map->CheckLineOfSight(captive.position, captive.p_player->position, captive.c_detectionRange);
 	}
 public:
 	SeePlayer()

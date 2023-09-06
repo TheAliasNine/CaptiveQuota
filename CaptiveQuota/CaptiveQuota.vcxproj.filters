@@ -56,6 +56,12 @@
     <ClCompile Include="Captive.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="AStarPath.cpp">
+      <Filter>AI\AStarPathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="AStarPathFinder.cpp">
+      <Filter>AI\AStarPathFinding</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -184,6 +190,15 @@
     <ClInclude Include="GoToLever.h">
       <Filter>AI\Captives\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="AStarNode.h">
+      <Filter>AI\AStarPathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AStarPath.h">
+      <Filter>AI\AStarPathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AStarPathFinder.h">
+      <Filter>AI\AStarPathFinding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="App">
@@ -221,6 +236,9 @@
     </Filter>
     <Filter Include="AI\Captives\Questions">
       <UniqueIdentifier>{835698e8-81f1-43da-87eb-1749de13dc0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\AStarPathFinding">
+      <UniqueIdentifier>{f4ed4a74-e2b1-4afe-a421-1845c3f65d4e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

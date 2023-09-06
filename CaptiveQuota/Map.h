@@ -71,6 +71,7 @@ public:
 	//enter negative value if infinite
 	bool CheckLineOfSight(v2 from, v2 to, float range);
 
+	int Index(intV2 node) { return node.x + node.y * m_size.x; }
 private:
 
 #pragma region MapMakingConstants
@@ -216,7 +217,6 @@ private:
 		}
 
 		Map* MakeMap();
-
 	};
 #pragma endregion
 

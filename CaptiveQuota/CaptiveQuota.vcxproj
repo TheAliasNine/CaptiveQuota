@@ -182,6 +182,8 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="AppIntro.cpp" />
+    <ClCompile Include="AStarPath.cpp" />
+    <ClCompile Include="AStarPathFinder.cpp" />
     <ClCompile Include="Captive.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="Exit.cpp" />
@@ -205,6 +207,9 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClInclude Include="App.h" />
     <ClInclude Include="AppIntro.h" />
     <ClInclude Include="AppState.h" />
+    <ClInclude Include="AStarNode.h" />
+    <ClInclude Include="AStarPath.h" />
+    <ClInclude Include="AStarPathFinder.h" />
     <ClInclude Include="Captive.h" />
     <ClInclude Include="CaptivePathGoalFinding.h" />
     <ClInclude Include="CheckForPOIs.h" />

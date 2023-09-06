@@ -6,9 +6,5 @@
 
 class RunAway : public Decision<Captive>
 {
-	void MakeDecision(Captive& captive) override
-	{
-		
-		//ToDo: captive run away
-	}
+	void MakeDecision(Captive& captive) override;
 };

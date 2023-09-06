@@ -2,7 +2,7 @@
 
 #include "AABB.h"
 
-const float Captive::scale = 0.5f;
+const float Captive::c_scale = 0.5f;
 
 
 Captive::Captive()
@@ -22,12 +22,12 @@ Captive::Captive(v2 position, Player* player, Map* map)
 
 	AABB* hitbox = new AABB();
 	hitbox->position = position;
-	hitbox->size = v2(m_txtrAlive.width * scale, m_txtrAlive.height * scale);
+	hitbox->size = v2(m_txtrAlive.width * c_scale, m_txtrAlive.height * c_scale);
 
 	m_hitbox = hitbox;
 
-	playerRef = player;
-	mapRef = map;
+	p_player = player;
+	p_map = map;
 }
 #pragma region Rule of 5
 Captive::~Captive()
@@ -87,17 +87,17 @@ void Captive::Draw(v2 camPos)
 	Vector2 drawPos = Vector2{ position.x - camPos.x, position.y - camPos.y };
 	if (m_alive)
 	{
-		drawPos.x -= m_txtrAlive.width / 2 * scale;
-		drawPos.y -= m_txtrAlive.height / 2 * scale;
-		DrawTextureEx(m_txtrAlive, drawPos, 0, scale, WHITE);
+		drawPos.x -= m_txtrAlive.width / 2 * c_scale;
+		drawPos.y -= m_txtrAlive.height / 2 * c_scale;
+		DrawTextureEx(m_txtrAlive, drawPos, 0, c_scale, WHITE);
 	}
 	else
 	{
-		drawPos.x -= m_txtrDead.width / 2 * scale;
-		drawPos.y -= m_txtrDead.height / 2 * scale;
+		drawPos.x -= m_txtrDead.width / 2 * c_scale;
+		drawPos.y -= m_txtrDead.height / 2 * c_scale;
 
 		drawPos.y += m_txtrAlive.height / 2 - m_txtrDead.height;
-		DrawTextureEx(m_txtrDead, drawPos, 0, scale, WHITE);
+		DrawTextureEx(m_txtrDead, drawPos, 0, c_scale, WHITE);
 	}
 }
 

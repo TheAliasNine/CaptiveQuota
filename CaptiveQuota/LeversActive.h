@@ -3,6 +3,8 @@
 
 #include "ABDecisionNode.h"
 #include "Captive.h"
+#include "Explore.h"
+#include "AllLeversActive.h"
 
 class LeversActive : public ABDecisionNode<Captive>
 {
@@ -14,6 +16,7 @@ protected:
 public:
 	LeversActive()
 	{
-
+		m_decA = new AllLeversActive();
+		m_decB = new Explore();
 	}
 };
