@@ -138,5 +138,21 @@ void AStarPathFinder::ProcessNextNode()
 
 bool AStarPathFinder::FoundGoal()
 {
-	return m_foundGoal;
+	return m_foundGoal; 
+}
+
+int AStarPathFinder::CalcHeuristicDistance(AStarNode& node)
+{
+	int dx = abs(node.Pos().x - m_goal.x);
+	int dy = abs(node.Pos().y - m_goal.y);
+
+	if (dx > dy) return ((14 * dy) + 10 * (dx - dy)) * m_heuristicModifier;
+	else return ((14 * dx) + 10 * (dy - dx)) * m_heuristicModifier;
+}
+int AStarPathFinder::CalcDistance(AStarNode& node, intV2 pos)
+
+void AStarPathFinder::SetNodeVals(AStarNode& node, AStarNode& previous)
+{
+	node.SetH(CalcHeuristicDistance(node));
+	node.Set
 }

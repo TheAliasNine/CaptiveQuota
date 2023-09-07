@@ -29,6 +29,11 @@ class AStarPathFinder
 	//use a vector because it means less dynamic memory requests
 	std::vector<AStarNode*> m_closedList;
 	
+
+	int CalcHeuristicDistance(AStarNode& node);
+	int CalcDistance(AStarNode& node);
+	void SetNodeVals(AStarNode& node);
+
 public:
 	AStarPathFinder(Map* map);
 
