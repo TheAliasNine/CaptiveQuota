@@ -22,17 +22,25 @@ class AStarPathFinder
 
 
 	AStarNode* m_nodes;
+
+	AStarNode* m_current;
 	
 	//use a list due to insertion being faster than on a vector
 	std::list<AStarNode*> m_openList;
 	
-	//use a vector because it means less dynamic memory requests
-	std::vector<AStarNode*> m_closedList;
+	bool* m_closedList;
 	
 
-	int CalcHeuristicDistance(AStarNode& node);
-	int CalcDistance(AStarNode& node);
-	void SetNodeVals(AStarNode& node);
+	int CalcHeuristicDistance(intV2 pointA, intV2 pointB);
+	int CalcDistance(intV2 pointA, intV2 pointB);
+	void SetNodeVals(AStarNode& node, AStarNode& previous);
+
+	intV2 ConvertIndToDir(int index);
+
+	AStarNode** GetConnectedNodes(AStarNode* node, int& outAmount);
+
+	void CheckRecalculateNode(AStarNode& node, AStarNode& newConnection);
+	void RecalculateNode(AStarNode& node, AStarNode& previous);
 
 public:
 	AStarPathFinder(Map* map);

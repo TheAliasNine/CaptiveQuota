@@ -21,9 +21,12 @@ public:
 
 	void Draw(intV2 playerPos);
 
+	bool Discover(intV2 position);
+
 private:
 
 	static const int miniMapSize = 150;
+	static const int c_detectionRange = 9;
 	static const int spacingFromEdge = 25;
 	static const int minCellSize = 2;
 	static const int maxCellSize = 10;
@@ -32,6 +35,8 @@ private:
 	intV2 m_mapSize;
 	intV2 m_knownMin;
 	intV2 m_knownMax;
+	intV2 prevMin;
+	intV2 prevMax;
 	unsigned short int* m_imageData;
 	Image m_mapImage;
 	Texture2D m_mapTexture;

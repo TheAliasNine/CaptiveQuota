@@ -1,6 +1,7 @@
 #include "Minimap.h"
 
 #include <raylib.h>
+#include <math.h>
 
 Minimap::Minimap()
 {
@@ -180,61 +181,86 @@ void Minimap::LoadMap(Map& map)
 void Minimap::DiscoverTile(intV2 pos)
 {
 	bool changed = false;
-	intV2 prevMin = m_knownMin;
-	intV2 prevMax = m_knownMax;
+	prevMin = m_knownMin;
+	prevMax = m_knownMax;
 
-	for (int i = 0; i < 9; i++)
+	//go out left
+	intV2 tilePos = pos;
+
+	int lMax = 0;
+	int rMax = 0;
+
+	intV2 check = tilePos;
+	changed = Discover(check) || changed;
+	check.x--;
+	while (m_traversibleGrid[check.x + check.y * m_mapSize.x] && lMax < c_detectionRange)
 	{
-		int index = 0;
-		intV2 discoverPos = pos;
-		switch (i)
+		changed = Discover(check) || changed;
+		check.x--;
+		lMax++;
+	}
+
+	check = tilePos;
+	check.x++;
+	while (m_traversibleGrid[check.x + check.y * m_mapSize.x] && rMax < c_detectionRange)
+	{
+		changed = Discover(check) || changed;
+		check.x++;
+		rMax++;
+	}
+
+	//up
+	check = tilePos;
+	check.y--;
+	int tlMax = lMax;
+	int trMax = rMax;
+	for (int top = 0; top < c_detectionRange && m_traversibleGrid[check.x + check.y * m_mapSize.x]; top++, check.y--)
+	{
+		changed = Discover(check) || changed;
+
+		check.x = tilePos.x;
+		check.x--;
+		for (int topLeft = 0; topLeft < tlMax && m_traversibleGrid[check.x + check.y * m_mapSize.x]; topLeft++, check.x--)
 		{
-		case(0):
-			break;
-		case(1):
-			discoverPos.x -= 1;
-			break;
-		case(2):
-			discoverPos.x += 1;
-			break;
-		case(3):
-			discoverPos.y += 1;
-			break;
-		case(4):
-			discoverPos.y -= 1;
-			break;
-		case(5):
-			discoverPos.x += 1;
-			discoverPos.y += 1;
-			break;
-		case(6):
-			discoverPos.x += 1;
-			discoverPos.y -= 1;
-			break;
-		case(7):
-			discoverPos.x -= 1;
-			discoverPos.y += 1;
-			break;
-		case(8):
-			discoverPos.x -= 1;
-			discoverPos.y -= 1;
-			break;
+			changed = Discover(check) || changed;
 		}
+		tlMax = abs(check.x - tilePos.x) < tlMax ? abs(check.x - tilePos.x ) : tlMax;
 
-		if (discoverPos.x < 0 || discoverPos.x >= m_mapSize.x || discoverPos.y < 0 || discoverPos.y >= m_mapSize.y)
-			continue;
-		index = discoverPos.x + discoverPos.y * m_mapSize.x;
+		check.x = tilePos.x;
+		check.x++;
+		for (int topRight = 0; topRight < trMax && m_traversibleGrid[check.x + check.y * m_mapSize.x]; topRight++, check.x++)
+		{
+			changed = Discover(check) || changed;
+		}
+		trMax = abs(check.x - tilePos.x) < trMax ? abs(check.x - tilePos.x) : trMax;
+		check.x = tilePos.x;
+	}
 
-		if (m_discovered[index]) continue;
-		changed = true;
-		m_discovered[index] = true;
+	//down
+	check = tilePos;
+	check.y++;
+	int dlMax = lMax;
+	int drMax = rMax;
+	for (int down = 0; down < c_detectionRange && m_traversibleGrid[check.x + check.y * m_mapSize.x]; down++, check.y++)
+	{
+		changed = Discover(check) || changed;
 
+		check.x = tilePos.x;
+		check.x--;
+		for (int downLeft = 0; downLeft < dlMax && m_traversibleGrid[check.x + check.y * m_mapSize.x]; downLeft++, check.x--)
+		{
+			changed = Discover(check) || changed;
+		}
+		dlMax = abs(check.x - tilePos.x) < dlMax ? abs(check.x - tilePos.x) : dlMax;
 
-
-		if (discoverPos.x < m_knownMin.x) m_knownMin.x = discoverPos.x - 1;
-		if (discoverPos.y < m_knownMin.y) m_knownMin.y = discoverPos.y - 1;
-		if (discoverPos.x > m_knownMax.x) m_knownMax.x = discoverPos.x + 1;
-		if (discoverPos.y > m_knownMax.y) m_knownMax.y = discoverPos.y + 1;
+		check.x = tilePos.x;
+		check.x++;
+		for (int downRight = 0; downRight < drMax && m_traversibleGrid[check.x + check.y * m_mapSize.x]; downRight++, check.x++)
+		{
+			changed = Discover(check) || changed;
+		}
+		drMax = abs(check.x - tilePos.x) < drMax ? abs(check.x - tilePos.x) : drMax;
+		check.x = tilePos.x;
 	}
 
 	if (!changed) return;
@@ -280,6 +306,22 @@ void Minimap::DiscoverTile(intV2 pos)
 	m_mapTexture = LoadTextureFromImage(m_mapImage);
 }
 
+bool Minimap::Discover(intV2 discoverPos)
+{
+	if (discoverPos.x < 0 || discoverPos.x >= m_mapSize.x || discoverPos.y < 0 || discoverPos.y >= m_mapSize.y)
+		return false;
+	int index = discoverPos.x + discoverPos.y * m_mapSize.x;
+
+	if (m_discovered[index]) return false;
+	m_discovered[index] = true;
+
+	if (discoverPos.x < m_knownMin.x) m_knownMin.x = discoverPos.x - 1;
+	if (discoverPos.y < m_knownMin.y) m_knownMin.y = discoverPos.y - 1;
+	if (discoverPos.x > m_knownMax.x) m_knownMax.x = discoverPos.x + 1;
+	if (discoverPos.y > m_knownMax.y) m_knownMax.y = discoverPos.y + 1;
+
+	return true;
+}
 
 void Minimap::Draw(intV2 playerPos)
 {

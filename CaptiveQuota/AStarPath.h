@@ -21,5 +21,6 @@ public:
 #pragma endregion
 
 	AStarNode Current();
+	intV2 Goal() { return m_path[m_pathLength - 1].Pos(); }
 	void Progress();
 };

@@ -23,6 +23,7 @@ public:
 
 	void DrawTiles(v2 camPos);
 
+
 	enum class Tile
 	{
 		null,
@@ -34,6 +35,7 @@ public:
 		vault,
 		TILECOUNT,
 	};
+	static bool IsTraversible(Tile tile);
 
 
 	Tile operator[] (int index);

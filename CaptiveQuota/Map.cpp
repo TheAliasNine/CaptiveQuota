@@ -140,6 +140,11 @@ Map& Map::operator= (Map&& other)
 
 #pragma endregion
 
+bool Map::IsTraversible(Tile tile)
+{
+	return tile != Tile::wall && tile != Tile::exit;
+}
+
 Map::Tile Map::operator[] (int index) { return m_tiles[index]; }
 Map::Tile Map::operator[] (intV2 pos) { return m_tiles[pos.x + pos.y * m_size.x]; }
 

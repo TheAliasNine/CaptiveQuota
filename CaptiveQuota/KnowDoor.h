@@ -10,7 +10,7 @@ class KnowDoor : public ABDecisionNode<Captive>
 protected:
 	virtual bool Condition(Captive& captive) override
 	{
-		
+		return captive.m_knownTiles[captive.p_map->Index(captive.p_map->Exit())];
 	}
 public:
 	KnowDoor()

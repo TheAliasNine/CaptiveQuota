@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AppState.h"
+#include "AStarPathFinder.h"
 #include "Captive.h"
 #include "CaptivePathGoalFinding.h"
 #include "Exit.h"
@@ -38,6 +39,7 @@ class Game : public AppState
 	static const int winCaptiveKills = 8;
 	std::vector<Captive> m_captives;
 	CaptivePathGoalFinding m_captiveAI = CaptivePathGoalFinding();
+	AStarPathFinder pathFinder;
 
 	Exit m_exitObj;
 

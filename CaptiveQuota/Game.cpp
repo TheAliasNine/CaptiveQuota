@@ -22,6 +22,8 @@ Game::Game()
 	m_map.CreateMap(std::time(nullptr));
 	m_map.SetCellSize(100);
 
+	pathFinder = AStarPathFinder(&m_map);
+
 	m_minimap.LoadMap(m_map);
 
 	m_player.position = v2(m_map.PlayerSpawn().x, m_map.PlayerSpawn().y) * m_map.CellSize();

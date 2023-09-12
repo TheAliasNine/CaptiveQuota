@@ -33,4 +33,6 @@ public:
 
 	intV2 Pos() { return m_pos; }
 	AStarNode* Previous() { return m_previous; }
+
+	bool Traversible() { return m_traversible; }
 };
