@@ -1,11 +1,13 @@
 #include "Captive.h"
 
 #include "AABB.h"
+#include "CaptivePathGoalFinding.h"
 
 #include <math.h>
 
 const float Captive::c_scale = 0.5f;
-const float Captive::c_speed = 100;
+const float Captive::c_interactRange = 150;
+const float Captive::c_speed = 200;
 const float Captive::c_detectionRange = 15;
 
 Captive::Captive()
@@ -28,7 +30,7 @@ Captive::Captive(v2 position, Player* player, Map* map)
 
 	AABB* hitbox = new AABB();
 	hitbox->position = position;
-	hitbox->size = v2(m_txtrAlive.width * c_scale, m_txtrAlive.height * c_scale);
+	hitbox->size = v2(m_txtrAlive.width * c_scale, m_txtrAlive.height * c_scale / 2);
 
 	m_hitbox = hitbox;
 
@@ -51,6 +53,10 @@ Captive::Captive(v2 position, Player* player, Map* map)
 	{
 		m_undiscoveredArea[i] = false;
 	}
+
+	Discover();
+
+	m_hitboxOffset = v2(0, (m_txtrAlive.height / 2) * c_scale / 2);
 }
 #pragma region Rule of 5
 Captive::~Captive()
@@ -155,37 +161,77 @@ Captive& Captive::operator= (Captive&& other)
 }
 #pragma endregion
 
+#include <iostream>
+
 void Captive::Update(float deltaTime)
 {
-	if (!m_alive) return;
+	if (!m_alive || m_escaped) return;
 
 	p_goalFinder->FindGoal(*this);
 
-	if (m_path.Goal() != m_goal)
+	if (m_path.Length() <= 0 || m_path.Goal() != m_goal)
 	{
-		p_pathfinder->Reset();
-		p_pathfinder->Setup(p_map->Vector2ToNode(position), m_goal);
+		std::cout << "Changing path to " << m_goal.x << ", " << m_goal.y << "." << std::endl;
+		p_pathfinder->Setup(p_map->Vector2ToNode(m_hitbox->position), m_goal);
 
 		m_path = p_pathfinder->FindPathToGoal();
 	}
 
+	if (m_path.Length() == 0)
+		return;
+
 	Discover();
 
-	if (position == p_map->NodeToVector2(m_path.Current().Pos()))
+	if (position + m_hitboxOffset == p_map->NodeToVector2(m_path.Current().Pos()))
 	{
 		m_path.Progress();
 	}
 
-	v2 posToNode = (p_map->NodeToVector2(m_path.Current().Pos()) - position);
+	v2 posToNode = (p_map->NodeToVector2(m_path.Current().Pos()) - (position + m_hitboxOffset));
 	v2 direction = posToNode.Normalized();
 
 	if (posToNode.Magnitude() < c_speed * deltaTime)
-		position = p_map->NodeToVector2(m_path.Current().Pos());
+	{
+		position = p_map->NodeToVector2(m_path.Current().Pos()) - m_hitboxOffset;
+		if (m_path.Current().Pos() == m_path.Goal())
+			m_running = false;
+	}
 	else
-		position += c_speed * deltaTime * direction;
+		position = position + (c_speed * deltaTime * direction);
+	m_hitbox->position = position + m_hitboxOffset;
+
+	CheckPOIs();
 }
+
+void Captive::CheckPOIs()
+{
+	for (int i = 0; i < p_map->LeverCount(); i++)
+	{
+		v2 obj = p_map->NodeToVector2(p_map->LeverPos(i));
+
+		float distanceSqrd = (obj.x - position.x) * (obj.x - position.x) + (obj.y - position.y) * (obj.y - position.y);
+
+		if (distanceSqrd < c_interactRange * c_interactRange)
+			p_map->ActivateLever(p_map->LeverPos(i));
+	}
+	if (!m_haveKey)
+	{
+		for (int i = 0; i < p_map->KeyMakerCount(); i++)
+		{
+			v2 obj = p_map->NodeToVector2(p_map->KeyMakerPos(i));
+
+			float distanceSqrd = (obj.x - position.x) * (obj.x - position.x) + (obj.y - position.y) * (obj.y - position.y);
+
+			if (distanceSqrd < c_interactRange * c_interactRange)
+				m_haveKey = true;
+		}
+	}
+}
+
 void Captive::Draw(v2 camPos)
 {
+	if (m_escaped)
+		return;
 	Vector2 drawPos = Vector2{ position.x - camPos.x, position.y - camPos.y };
 	if (m_alive)
 	{
@@ -201,6 +247,7 @@ void Captive::Draw(v2 camPos)
 		drawPos.y += m_txtrAlive.height / 2 - m_txtrDead.height;
 		DrawTextureEx(m_txtrDead, drawPos, 0, c_scale, WHITE);
 	}
+
 }
 
 void Captive::Kill()

@@ -36,6 +36,7 @@ Game::Game()
 		capPosition.x = std::rand() % (m_map.PrisonCellMax().x - m_map.PrisonCellMin().x) + m_map.PrisonCellMin().x;
 		capPosition.y = std::rand() % (m_map.PrisonCellMax().y - m_map.PrisonCellMin().y) + m_map.PrisonCellMin().y;
 		m_captives.push_back(Captive(m_map.NodeToVector2(capPosition), &m_player, &m_map));
+		m_captives.back().SetAI(&pathFinder, &m_captiveAI, &m_player);
 	}
 
 	m_exitObj = Exit(&m_map);
@@ -72,6 +73,12 @@ Game::Game()
 	{
 		m_keyMakers.push_back(KeyMaker(&m_map, i));
 	}
+
+
+	m_freeCam = true;
+	m_camPos = m_map.NodeToVector2(m_map.PrisonCellMax());
+	m_camPos.x -= 550;
+	m_camPos.y -= 550;
 }
 
 Game::~Game()
@@ -94,14 +101,18 @@ void Game::Update(float deltaTime)
 	if (m_captives.size() < winCaptiveKills)
 		GameFinished(false);
 	int killCount = 0;
+	int escaped = 0;
 	for (auto iter = m_captives.begin(); iter != m_captives.end(); iter++)
 	{
 		if (!iter->Alive())
 			killCount++;
+		if (iter->Escaped())
+			escaped++;
 	}
 	if (killCount >= winCaptiveKills)
 		GameFinished(true);
-
+	else if (captiveCount - escaped < winCaptiveKills)
+		GameFinished(false);
 	UpdateMusicStream(music);
 
 	if (m_gameFinished)
@@ -121,6 +132,10 @@ void Game::Update(float deltaTime)
 	{
 		m_player.Update(deltaTime);
 		m_camPos = m_player.position - v2(WINDOWX / 2, WINDOWY / 2);
+
+		m_camPos = m_captives.begin()->position;
+		m_camPos.x -= WINDOWX / 2;
+		m_camPos.y -= WINDOWY / 2;
 	}
 	else
 	{
@@ -142,6 +157,11 @@ void Game::Update(float deltaTime)
 
 	//Use hitbox position to avoid getting cells not on due to topdown perspective
 	m_minimap.DiscoverTile(m_map.Vector2ToNode(m_player.Hitbox()->position));
+
+	for (auto iter = m_captives.begin(); iter != m_captives.end(); iter++)
+	{
+		iter->Update(deltaTime);
+	}
 	
 	//FireBalls
 	if (m_casting)
@@ -404,51 +424,6 @@ bool Game::CheckMapCollisions(HitBoxObject* obj, bool resolve)
 		hitbox->position = hitbox->position + hitboxOffset;
 		if (hitbox->CheckCollision(m_exitObj.Hitbox(), nullptr)) return true;
 	}
-	//levers
-	for (auto iter = m_levers.begin(); iter != m_levers.end(); iter++)
-	{
-		if (resolve)
-		{
-			CollisionInfo info = CollisionInfo();
-			Collider* hitbox = obj->Hitbox();
-			hitbox->position = hitbox->position + hitboxOffset;
-			bool collided = hitbox->CheckCollision(iter->Hitbox(), &info);
-			if (collided)
-			{
-				hitboxOffset = hitboxOffset + info.depth * info.direction;
-			}
-		}
-		else
-		{
-			Collider* hitbox = obj->Hitbox();
-			hitbox->position = hitbox->position + hitboxOffset;
-			if (hitbox->CheckCollision(iter->Hitbox(), nullptr)) return true;
-		}
-	}
-
-	//KeyMakers
-	for (auto iter = m_keyMakers.begin(); iter != m_keyMakers.end(); iter++)
-	{
-		if (resolve)
-		{
-			CollisionInfo info = CollisionInfo();
-			Collider* hitbox = obj->Hitbox();
-			hitbox->position = hitbox->position + hitboxOffset;
-			bool collided = hitbox->CheckCollision(iter->Hitbox(), &info);
-			if (collided)
-			{
-				hitboxOffset = hitboxOffset + info.depth * info.direction;
-			}
-		}
-		else
-		{
-			Collider* hitbox = obj->Hitbox();
-			hitbox->position = hitbox->position + hitboxOffset;
-			if (hitbox->CheckCollision(iter->Hitbox(), nullptr)) return true;
-		}
-	}
-
-
 	obj->position = obj->position + hitboxOffset;
 	return hitboxOffset.x != 0 || hitboxOffset.y != 0;
 }

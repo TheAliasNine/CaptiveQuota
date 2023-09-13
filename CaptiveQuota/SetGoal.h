@@ -8,23 +8,30 @@ class SetGoal : public Decision<Captive>
 public:
 	virtual void MakeDecision(Captive& captive) override
 	{
-		Map map = *captive.p_map;
+		Map* map = captive.p_map;
 		if (!captive.HaveKey())
 		{
-			for (int i = 0; i < map.KeyMakerCount(); i++)
+			for (int i = 0; i < map->KeyMakerCount(); i++)
 			{
-				if (!map.CheckLineOfSight(captive.position, map.NodeToVector2(map.KeyMakerPos(i)), -1))
+				if (captive.m_goal == map->KeyMakerPos(i))
+					return;
+				if (!map->CheckLineOfSight(captive.position, map->NodeToVector2(map->KeyMakerPos(i)), captive.c_detectionRange * captive.p_map->CellSize()))
 					continue;
-				captive.m_goal = map.KeyMakerPos(i);
+				captive.m_goal = map->KeyMakerPos(i);
 				return;
 			}
 		}
-		for (int i = 0; i < map.LeverCount(); i++)
+		for (int i = 0; i < map->LeverCount(); i++)
 		{
-			if (!map.CheckLineOfSight(captive.position, map.NodeToVector2(map.LeverPos(i)), -1))
+			if (captive.m_goal == map->LeverPos(i))
+				return;
+			if (map->IsLeverActive(map->LeverPos(i)))
 				continue;
-			captive.m_goal = map.LeverPos(i);
+			if (!map->CheckLineOfSight(captive.position, map->NodeToVector2(map->LeverPos(i)), captive.c_detectionRange * captive.p_map->CellSize()))
+				continue;
+			captive.m_goal = map->LeverPos(i);
 			return;
 		}
+
 	}
 };

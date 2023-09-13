@@ -273,8 +273,8 @@ bool Map::CheckLineOfSight(v2 from, v2 to, float range)
 
 	if (range >= 0 && magnitude > range)
 		return false;
-
-	for (float check = 0; check <= magnitude; check += m_cellSize)
+	if (magnitude == 0) return true;
+	for (float check = 0; check <= magnitude; check += m_cellSize / 5)
 	{
 		v2 checkPos = from + direction * check;
 		intV2 node = Vector2ToNode(checkPos);

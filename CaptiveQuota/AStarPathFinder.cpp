@@ -1,5 +1,14 @@
 #include "AStarPathFinder.h"
 
+AStarPathFinder::AStarPathFinder()
+{
+	p_map = nullptr;
+
+	m_current = nullptr;
+	m_closedList = nullptr;
+	m_nodes = nullptr;
+	m_heuristicModifier = 1;
+}
 AStarPathFinder::AStarPathFinder(Map* map)
 {
 	p_map = map;
@@ -7,6 +16,13 @@ AStarPathFinder::AStarPathFinder(Map* map)
 	m_size = p_map->Size();
 
 	m_nodes = new AStarNode[m_size.x * m_size.y];
+	for (int i = 0; i < m_size.x * m_size.y; i++)
+	{
+		m_nodes[i] = AStarNode();
+		int x = i % m_size.x;
+		int y = i / m_size.x;
+		m_nodes[i].SetVals(intV2{x, y}, (*p_map)[i] != Map::Tile::wall && (*p_map)[i] != Map::Tile::exit);
+	}
 	m_current = &m_nodes[0];
 
 	m_closedList = new bool[p_map->Size().x * p_map->Size().y];
@@ -14,12 +30,15 @@ AStarPathFinder::AStarPathFinder(Map* map)
 	{
 		m_closedList[i] = false;
 	}
+	m_heuristicModifier = 1;
 }
 
 #pragma region Rule of 5
 AStarPathFinder::~AStarPathFinder()
 {
 	delete[] m_nodes;
+	delete[] m_closedList;
+
 }
 AStarPathFinder::AStarPathFinder(const AStarPathFinder& other)
 {
@@ -65,6 +84,8 @@ AStarPathFinder& AStarPathFinder::operator= (const AStarPathFinder& other)
 	m_current = &m_nodes[p_map->Index(other.m_current->Pos())];
 
 	m_openList = other.m_openList;
+	delete[] m_closedList;
+	m_closedList = new bool[m_size.x * m_size.y];
 	for (int i = 0; i < p_map->Size().x * p_map->Size().y; i++)
 	{
 		m_closedList[i] = other.m_closedList[i];
@@ -122,7 +143,7 @@ AStarPath AStarPathFinder::ConstructPath(AStarNode pathEnd)
 
 AStarPath AStarPathFinder::FindPathToGoal()
 {
-	while (!m_openList.empty() || m_foundGoal)
+	while (!m_openList.empty() && !m_foundGoal)
 	{
 		ProcessNextNode();
 	}
@@ -140,6 +161,7 @@ void AStarPathFinder::Reset()
 {
 	m_start = intV2();
 	m_goal = intV2();
+
 	m_foundGoal = false;
 	m_openList.clear();
 	for (int i = 0; i < p_map->Size().x * p_map->Size().y; i++)
@@ -152,12 +174,14 @@ void AStarPathFinder::Setup(intV2 start, intV2 goal)
 	Reset();
 	m_start = start;
 	m_goal = goal;
+	SetNodeVals(m_nodes[start.x + start.y * m_size.x], nullptr);
+	m_openList.push_front(&m_nodes[start.x + start.y * m_size.x]);
 
 }
 void AStarPathFinder::Setup(intV2 start, intV2 goal, float heuristicModifier)
 {
-	Setup(start, goal);
 	m_heuristicModifier = heuristicModifier;
+	Setup(start, goal);
 }
 
 AStarNode& AStarPathFinder::NextNode()
@@ -174,44 +198,55 @@ void AStarPathFinder::ProcessNextNode()
 	m_current = m_openList.front();
 
 	m_openList.pop_front();
+
+	m_closedList[p_map->Index(m_current->Pos())] = true;
 	
+	if (m_current->Pos() == m_goal)
+		m_foundGoal = true;
 
 	int connectionCount = 0;
 	AStarNode** connections = GetConnectedNodes(m_current, connectionCount);
 
 	for (int i = 0; i < connectionCount; i++)
 	{
-		int newNodeInd = p_map->Index(ConvertIndToDir(i) + m_current->Pos());
+		int newNodeInd = p_map->Index(connections[i]->Pos());
 
-		bool exists = false;
+		
+		bool exists = m_closedList[newNodeInd];
 
-		for (auto iter = m_openList.begin(); iter != m_openList.end(); iter++)
+		if (!exists)
 		{
-			if (*iter != &m_nodes[newNodeInd]) continue;
+			for (auto iter = m_openList.begin(); iter != m_openList.end(); iter++)
+			{
+				if (*iter != &m_nodes[newNodeInd]) continue;
 
-			exists = true;
-			break;
+				exists = true;
+				break;
+			}
 		}
-		if (!exists && m_closedList[newNodeInd])
-			exists = true;
 
 		if (exists)
 		{
-			RecalculateNode(*connections[i], *m_current);
+			CheckRecalculateNode(*connections[i], *m_current);
 			continue;
 		}
 		
-		SetNodeVals(*connections[i], *m_current);
+		SetNodeVals(*connections[i], m_current);
+
 		
 		if (connections[i]->Traversible())
 		{
+			int openListCount = m_openList.size();
 			for (auto iter = m_openList.begin(); iter != m_openList.end(); iter++)
 			{
 				if ((*iter)->F() > connections[i]->F())
 				{
 					m_openList.insert(iter, connections[i]);
+					break;
 				}
 			}
+			if (openListCount == m_openList.size())
+				m_openList.push_back(connections[i]);
 		}
 		else
 		{
@@ -241,45 +276,12 @@ int AStarPathFinder::CalcDistance(intV2 pointA, intV2 pointB)
 	else return (14 * dx) + 10 * (dy - dx);
 }
 
-void AStarPathFinder::SetNodeVals(AStarNode& node, AStarNode& previous)
+void AStarPathFinder::SetNodeVals(AStarNode& node, AStarNode* previous)
 {
 	node.SetH(CalcHeuristicDistance(node.Pos(), m_goal));
-	node.SetG(previous.m_g + CalcDistance(node.m_pos, previous.m_pos));
-}
-
-intV2 AStarPathFinder::ConvertIndToDir(int index)
-{
-	if (index < 0) return intV2();
-	if (index > 8) return intV2();
-
-	switch (index)
-	{
-	case 0:
-		return intV2{ 0, -1 };
-		break;
-	case 1:
-		return intV2{ -1, 0 };
-		break;
-	case 2:
-		return intV2{ 1, 0 };
-		break;
-	case 3:
-		return intV2{ -1, 0 };
-		break;
-	case 4:
-		return intV2{ -1, -1 };
-		break;
-	case 5:
-		return intV2{ 1, -1 };
-		break;
-	case 6:
-		return intV2{ -1, 1 };
-		break;
-	case 7:
-		return intV2{ -1, 1 };
-		break;
-	}
-	return intV2();
+	node.m_previous = previous;
+	if (previous != nullptr)
+		node.SetG(previous->m_g + CalcDistance(node.m_pos, previous->m_pos));
 }
 
 AStarNode** AStarPathFinder::GetConnectedNodes(AStarNode* node, int& outAmount)
@@ -352,14 +354,20 @@ AStarNode** AStarPathFinder::GetConnectedNodes(AStarNode* node, int& outAmount)
 
 void AStarPathFinder::CheckRecalculateNode(AStarNode& node, AStarNode& newConnection)
 {
-	int checkF = CalcHeuristicDistance(node.Pos(), m_goal) + (newConnection.m_g + CalcDistance(node.m_pos, newConnection.m_pos));
-	if (checkF < node.F())
+	int checkH = CalcHeuristicDistance(node.Pos(), m_goal);
+	int checkG = newConnection.m_g + CalcDistance(node.m_pos, newConnection.m_pos);
+	if (checkH + checkG < node.F())
 		RecalculateNode(node, newConnection);
 }
 
 void AStarPathFinder::RecalculateNode(AStarNode& node, AStarNode& previous)
 {
-	SetNodeVals(node, previous);
+	if (previous.Previous() == &node)
+	{
+		int i = 0;
+	}
+	
+	SetNodeVals(node, &previous);
 	int connectionsCount = 0;
 	AStarNode** connections = GetConnectedNodes(&node, connectionsCount);
 

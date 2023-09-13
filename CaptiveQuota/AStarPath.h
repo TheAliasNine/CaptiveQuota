@@ -20,7 +20,9 @@ public:
 	AStarPath& operator= (AStarPath&& other);
 #pragma endregion
 
+	AStarNode Index(int i) { return m_path[i]; }
 	AStarNode Current();
+	int Length() { return m_pathLength; }
 	intV2 Goal() { return m_path[m_pathLength - 1].Pos(); }
 	void Progress();
 };

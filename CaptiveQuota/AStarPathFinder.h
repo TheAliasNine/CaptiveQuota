@@ -33,9 +33,7 @@ class AStarPathFinder
 
 	int CalcHeuristicDistance(intV2 pointA, intV2 pointB);
 	int CalcDistance(intV2 pointA, intV2 pointB);
-	void SetNodeVals(AStarNode& node, AStarNode& previous);
-
-	intV2 ConvertIndToDir(int index);
+	void SetNodeVals(AStarNode& node, AStarNode* previous);
 
 	AStarNode** GetConnectedNodes(AStarNode* node, int& outAmount);
 
@@ -43,6 +41,7 @@ class AStarPathFinder
 	void RecalculateNode(AStarNode& node, AStarNode& previous);
 
 public:
+	AStarPathFinder();
 	AStarPathFinder(Map* map);
 
 	~AStarPathFinder();

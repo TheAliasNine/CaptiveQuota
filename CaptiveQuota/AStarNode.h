@@ -31,6 +31,11 @@ public:
 
 	AStarNode* m_previous;
 
+	void SetVals(intV2 pos, bool traversible)
+	{ 
+		m_pos = pos;
+		m_traversible = traversible;
+	}
 	intV2 Pos() { return m_pos; }
 	AStarNode* Previous() { return m_previous; }
 

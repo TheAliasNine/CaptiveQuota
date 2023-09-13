@@ -36,8 +36,11 @@ void App::Update()
 	}
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 	std::chrono::duration<float> deltaTime = now - lastTime;
+
 	lastTime = now;
 	m_deltaTime = deltaTime.count();
+	if (m_deltaTime > 0.3f)
+		m_deltaTime = 0.3f;
 	state->Update(m_deltaTime);
 	if (state->Closed())
 	{

@@ -17,6 +17,8 @@ private:
 public:
 	void MakeDecision(Captive& captive) override
 	{
+		if (captive.m_running)
+			return;
 		AStarPathFinder pathfinder = AStarPathFinder(captive.p_map);
 
 		pathfinder.Setup(captive.p_map->Vector2ToNode(captive.position), captive.p_map->Vector2ToNode(captive.p_player->position), -1);
@@ -27,5 +29,6 @@ public:
 
 		} while (DistanceSquared(pathfinder.JustProcessedNode().Pos(), captive.p_map->Vector2ToNode(captive.p_player->position)) < distance * distance);
 		captive.m_goal = pathfinder.JustProcessedNode().Pos();
+		captive.m_running = true;
 	}
 };

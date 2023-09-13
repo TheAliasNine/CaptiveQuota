@@ -4,10 +4,12 @@ AStarPath::AStarPath()
 {
 	m_pathLength = 0;
 	m_path = nullptr;
+	m_current = 0;
 }
 
 AStarPath::AStarPath(AStarNode endNode)
 {
+	m_current = 0;
 	int pathSize = 1;
 	for (AStarNode node = endNode; node.Previous() != nullptr; node = *node.Previous())
 	{
@@ -20,6 +22,7 @@ AStarPath::AStarPath(AStarNode endNode)
 	for (AStarNode* node = &endNode; node != nullptr; node = node->Previous())
 	{
 		m_path[i] = *node;
+		i--;
 	}
 }
 
