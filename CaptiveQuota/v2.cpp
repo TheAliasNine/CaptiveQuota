@@ -31,6 +31,8 @@ float v2::Magnitude()
 v2 v2::Normalized()
 {
 	float mag = Magnitude();
+	if (mag == 0)
+		return v2();
 	return v2(x / mag, y / mag);
 }
 
@@ -97,22 +99,32 @@ v2 v2::ClampVector(v2 value, v2 min, v2 max)
 	return value;
 }
 
-void v2::ClampVector(v2 min, v2 max)
+v2 v2::ClampVector(v2 min, v2 max)
 {
-	if (x < min.x)
+	v2 value = v2();
+	if (value.x < min.x)
 	{
-		x = min.x;
+		value.x = min.x;
 	}
-	else if (x > max.x)
+	else if (value.x > max.x)
 	{
-		x = max.x;
+		value.x = max.x;
 	}
-	if (y < min.y)
+	if (value.y < min.y)
 	{
-		y = min.y;
+		value.y = min.y;
 	}
-	else if (y > max.y)
+	else if (value.y > max.y)
 	{
-		y = max.y;
+		value.y = max.y;
 	}
+	return value;
+}
+
+v2 v2::RotateVector(float radians)
+{
+	v2 value = v2(
+		cos(radians) * x + sin(radians) * y,
+		-sin(radians) * x + cos(radians) * y);
+	return value;
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -86,7 +86,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WINDOWX=800;WINDOWY=450;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWX=1200;WINDOWY=675;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Raylib\include;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -110,7 +110,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WINDOWX=800;WINDOWY=450;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWX=1200;WINDOWY=675;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Raylib\include;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -134,7 +134,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WINDOWX=800;WINDOWY=450;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWX=1200;WINDOWY=675;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Raylib\include;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -145,8 +145,8 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
       <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist $(OutDir)Assets\ mkdir $(OutDir)Assets\
-xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
+      <Command>if not exist "$(OutDir)Assets\" mkdir "$(OutDir)Assets\"
+xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>rd /s /q "$(TargetDir)"</Command>
@@ -158,7 +158,7 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WINDOWX=800;WINDOWY=450;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWX=1200;WINDOWY=675;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Raylib\include;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -182,23 +182,70 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="AppIntro.cpp" />
+    <ClCompile Include="AStarPath.cpp" />
+    <ClCompile Include="AStarPathFinder.cpp" />
+    <ClCompile Include="Captive.cpp" />
     <ClCompile Include="Circle.cpp" />
+    <ClCompile Include="Exit.cpp" />
+    <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="FireBall.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="KeyMaker.cpp" />
+    <ClCompile Include="Lever.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MapMaker.cpp" />
+    <ClCompile Include="Minimap.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="v2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
+    <ClInclude Include="AllLeversActive.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="AppIntro.h" />
     <ClInclude Include="AppState.h" />
+    <ClInclude Include="AStarNode.h" />
+    <ClInclude Include="AStarPath.h" />
+    <ClInclude Include="AStarPathFinder.h" />
+    <ClInclude Include="Captive.h" />
+    <ClInclude Include="CaptivePathGoalFinding.h" />
+    <ClInclude Include="CheckForPOIs.h" />
+    <ClInclude Include="Decision.h" />
+    <ClInclude Include="ABDecisionNode.h" />
+    <ClInclude Include="Exit.h" />
+    <ClInclude Include="Explore.h" />
+    <ClInclude Include="Explosion.h" />
+    <ClInclude Include="FireBall.h" />
+    <ClInclude Include="GoToDoor.h" />
+    <ClInclude Include="GoToLever.h" />
+    <ClInclude Include="GoToPortal.h" />
+    <ClInclude Include="HaveKey.h" />
+    <ClInclude Include="HitBoxObject.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Circle.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionInfo.h" />
+    <ClInclude Include="CorridorNode.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="intV2.h" />
+    <ClInclude Include="KeyMaker.h" />
+    <ClInclude Include="KnowDoor.h" />
+    <ClInclude Include="KnowLastLever.h" />
+    <ClInclude Include="KnowPortalLocation.h" />
+    <ClInclude Include="Lever.h" />
+    <ClInclude Include="LeversActive.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Minimap.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Runaway.h" />
+    <ClInclude Include="SceneObject.h" />
+    <ClInclude Include="SeePlayer.h" />
+    <ClInclude Include="SetGoal.h" />
     <ClInclude Include="v2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

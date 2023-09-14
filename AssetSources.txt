@@ -1,1 +1,20 @@
-AppIntro = misc_menu_2.wav from GUI_Sound_Effects_by_Lokif
+Art
+Player Sprites by Trinni
+Map Tile Sprites by JaggedStone									https://opengameart.org/content/dungeon-tile-set		modified by me (hue changes)
+FireBall by Revon												https://opengameart.org/content/fireball-3
+Explosion by Jetrel												https://opengameart.org/content/explosion-animations	modified by me (added 1 frame, removed 1 other frame)
+Exit by Sharm, contributed to by William Thompsonj				https://opengameart.org/content/lpc-dungeon-elements    modified by me to fit
+Portal by RodHakGames											https://opengameart.org/content/portals-32-x-48
+Switch by pechvogel												https://opengameart.org/content/switch-0				modified by me (hue change) and seperated sprite
+
+Music
+Main Menu Music by brandon75689									https://opengameart.org/content/tragic-ambient-main-menu
+Game Music by brandon75689										https://opengameart.org/content/cave-theme
+
+Sound Effects
+AppIntro = misc_menu_2.wav from GUI_Sound_Effects_by_Lokif		https://opengameart.org/content/gui-sound-effects
+FireBall Sound by Julien Matthey								https://freesound.org/people/Julien%20Matthey/sounds/105016/ clipped by me
+Explosion by Unnamed											https://opengameart.org/content/9-explosion-sounds
+ExitOpen/Close by Owlish Media									https://opengameart.org/content/202-more-sound-effects
+Lever On/Off by BMacZero										https://opengameart.org/content/mechanical-sounds
+KeyMold interact by vehicle										https://opengameart.org/content/fantasy-sound-effects-tinysized-sfx

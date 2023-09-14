@@ -28,7 +28,9 @@ public:
 	v2 ClampMag(float max);
 
 	static v2 ClampVector(v2 value, v2 min, v2 max);
-	void ClampVector(v2 min, v2 max);
+	v2 ClampVector(v2 min, v2 max);
+
+	v2 RotateVector(float radians);
 
 
 	//operators
@@ -58,6 +60,6 @@ public:
 	v2 operator+= (v2 v) { return v2(x + v.x, y + v.y); }
 	v2 operator- (v2 v) { return v2(x - v.x, y - v.y); }
 	v2 operator-= (v2 v) { return v2(x - v.x, y - v.y); }
-	bool operator== (v2 v) { return x == x && y == y; }
-	bool operator!= (v2 v) { return x != x || y != y; }
+	bool operator== (v2 v) { return x == v.x && y == v.y; }
+	bool operator!= (v2 v) { return x != v.x || y != v.y; }
 };
