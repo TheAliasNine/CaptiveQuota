@@ -11,7 +11,7 @@ Explosion::Explosion()
 	m_timer = 0;
 	for (int i = 0; i < frameCount; i++)
 	{
-		m_animFrames[i] = LoadTexture(FormatText("Assets\\Images\\Exploaion%i", i));
+		m_animFrames[i] = LoadTexture(FormatText("Assets\\Images\\Explosion%i", i));
 	}
 }
 #pragma region Rule of 5

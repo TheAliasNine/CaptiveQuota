@@ -21,6 +21,7 @@ void App::Init()
 	running = true;
 	InitWindow(WINDOWX, WINDOWY, "Captive Quota");
 	InitAudioDevice();
+	SetTargetFPS(60);
 	SetExitKey(0);
 	state = new AppIntro();
 }

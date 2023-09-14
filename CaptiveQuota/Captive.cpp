@@ -161,8 +161,6 @@ Captive& Captive::operator= (Captive&& other)
 }
 #pragma endregion
 
-#include <iostream>
-
 void Captive::Update(float deltaTime)
 {
 	if (!m_alive || m_escaped) return;
@@ -171,7 +169,6 @@ void Captive::Update(float deltaTime)
 
 	if (m_path.Length() <= 0 || m_path.Goal() != m_goal)
 	{
-		std::cout << "Changing path to " << m_goal.x << ", " << m_goal.y << "." << std::endl;
 		p_pathfinder->Setup(p_map->Vector2ToNode(m_hitbox->position), m_goal);
 
 		m_path = p_pathfinder->FindPathToGoal();
@@ -203,6 +200,38 @@ void Captive::Update(float deltaTime)
 	CheckPOIs();
 }
 
+void Captive::Draw(v2 camPos)
+{
+	if (m_escaped)
+		return;
+	Vector2 drawPos = Vector2{ position.x - camPos.x, position.y - camPos.y };
+	if (m_alive)
+	{
+		int halfWidth = m_txtrAlive.width / 2 * c_scale;
+		int halfHeight = m_txtrAlive.height / 2 * c_scale;
+		drawPos.x -= halfWidth;
+		drawPos.y -= halfHeight;
+		
+		if (drawPos.x < -halfWidth || drawPos.x > WINDOWX + halfWidth || drawPos.y < -halfHeight || drawPos.y > WINDOWY + halfHeight)
+			return;
+		DrawTextureEx(m_txtrAlive, drawPos, 0, c_scale, WHITE);
+	}
+	else
+	{
+
+		int halfWidth = m_txtrDead.width / 2 * c_scale;
+		int halfHeight = m_txtrDead.height / 2 * c_scale;
+		drawPos.x -= halfWidth;
+		drawPos.y -= halfHeight;
+
+		drawPos.y += m_txtrAlive.height / 2 - m_txtrDead.height;
+		if (drawPos.x < -halfWidth || drawPos.x > WINDOWX + halfWidth || drawPos.y < -halfHeight || drawPos.y > WINDOWY + halfHeight)
+			return;
+		DrawTextureEx(m_txtrDead, drawPos, 0, c_scale, WHITE);
+	}
+
+}
+
 void Captive::CheckPOIs()
 {
 	for (int i = 0; i < p_map->LeverCount(); i++)
@@ -226,28 +255,6 @@ void Captive::CheckPOIs()
 				m_haveKey = true;
 		}
 	}
-}
-
-void Captive::Draw(v2 camPos)
-{
-	if (m_escaped)
-		return;
-	Vector2 drawPos = Vector2{ position.x - camPos.x, position.y - camPos.y };
-	if (m_alive)
-	{
-		drawPos.x -= m_txtrAlive.width / 2 * c_scale;
-		drawPos.y -= m_txtrAlive.height / 2 * c_scale;
-		DrawTextureEx(m_txtrAlive, drawPos, 0, c_scale, WHITE);
-	}
-	else
-	{
-		drawPos.x -= m_txtrDead.width / 2 * c_scale;
-		drawPos.y -= m_txtrDead.height / 2 * c_scale;
-
-		drawPos.y += m_txtrAlive.height / 2 - m_txtrDead.height;
-		DrawTextureEx(m_txtrDead, drawPos, 0, c_scale, WHITE);
-	}
-
 }
 
 void Captive::Kill()
