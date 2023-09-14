@@ -4,6 +4,7 @@
 
 
 #include "AppIntro.h"
+#include "Game.h"
 
 App::App()
 {
@@ -22,8 +23,7 @@ void App::Init()
 	InitWindow(WINDOWX, WINDOWY, "Captive Quota");
 	InitAudioDevice();
 	SetExitKey(0);
-
-	state = new AppIntro();
+	state = new Game();
 }
 
 
@@ -36,9 +36,12 @@ void App::Update()
 	}
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 	std::chrono::duration<float> deltaTime = now - lastTime;
-	lastTime = now;
 
-	state->Update(deltaTime.count());
+	lastTime = now;
+	m_deltaTime = deltaTime.count();
+	if (m_deltaTime > 0.3f)
+		m_deltaTime = 0.3f;
+	state->Update(m_deltaTime);
 	if (state->Closed())
 	{
 		AppState* nextState = state->NextState();
@@ -53,7 +56,7 @@ void App::Draw()
 {
 	if (!running) return;
 	BeginDrawing();
-	state->Draw();
+	state->Draw(m_deltaTime);
 	EndDrawing();
 }
 

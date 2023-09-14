@@ -13,6 +13,8 @@ bool Circle::CheckCollision(v2 point)
 bool Circle::CheckCollision(AABB* aabb, CollisionInfo* outInfo)
 {
 	v2 closestPoint = v2::ClampVector(position, aabb->Min(), aabb->Max());
+	closestPoint.x -= position.x;
+	closestPoint.y -= position.y;
 
 	return radius * radius > closestPoint.x * closestPoint.x + closestPoint.y * closestPoint.y;
 }

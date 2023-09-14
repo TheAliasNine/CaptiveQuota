@@ -9,7 +9,7 @@ AppIntro::AppIntro()
 	sound = LoadSoundFromWave(wave);
 }
 
-void AppIntro::Draw()
+void AppIntro::Draw(float deltaTime)
 {
 	ClearBackground(DARKGRAY);
 	int fontSize = 40;

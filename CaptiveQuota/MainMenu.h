@@ -36,5 +36,5 @@ public:
 	~MainMenu();
 
 	void Update(float deltaTime);
-	void Draw();
+	void Draw(float deltaTime);
 };

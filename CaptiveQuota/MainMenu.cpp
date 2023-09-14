@@ -1,6 +1,6 @@
 #include "MainMenu.h"
 
-
+#include "Game.h"
 #include "InputManager.h"
 #include "v2.h"
 
@@ -49,7 +49,7 @@ void MainMenu::Update(float deltaTime)
 	}
 }
 
-void MainMenu::Draw()
+void MainMenu::Draw(float deltaTime)
 {
 	ClearBackground(DARKGRAY);
 	switch (state)
@@ -82,7 +82,7 @@ void MainMenu::NormalUpdate()
 	if (playBox.CheckCollision(mousePos))
 	{
 		closed = true;
-		//nextState = ;
+		nextState = new Game();
 	}
 	else if (creditsBox.CheckCollision(mousePos))
 	{

@@ -15,7 +15,16 @@ public:
 		//Basic Navigation
 		Confirm,
 		Back,
+		Up,
+		Down,
+		Left,
+		Right,
+		Cast,
 		OpenMenu,
+		Restart,
+		Exit,
+		Interact,
+		FreeCam,
 
 		KEYBINDLENGTH,
 	};
