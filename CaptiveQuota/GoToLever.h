@@ -3,8 +3,6 @@
 #include "Decision.h"
 #include "Captive.h"
 
-#include <iostream>
-
 class GoToLever : public Decision<Captive>
 {
 public:
@@ -17,6 +15,5 @@ public:
 			captive.m_goal = captive.p_map->LeverPos(i);
 			return;
 		}
-		std::cout << "Going to lever." << std::endl;
 	}
 };

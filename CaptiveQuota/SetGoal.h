@@ -9,6 +9,13 @@ public:
 	virtual void MakeDecision(Captive& captive) override
 	{
 		Map* map = captive.p_map;
+		if (map->IsPortalActive())
+		{
+			if (map->CheckLineOfSight(captive.position, map->NodeToVector2(map->PortalPosition()), captive.c_detectionRange * captive.p_map->CellSize()))
+			{
+				captive.m_goal = map->PortalPosition();
+			}
+		}
 		if (!captive.HaveKey())
 		{
 			for (int i = 0; i < map->KeyMakerCount(); i++)

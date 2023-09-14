@@ -12,7 +12,7 @@ protected:
 	{
 		for (int i = 0; i < captive.p_map->LeverCount(); i++)
 		{
-			if (!captive.p_map->IsLeverActive(captive.p_map->LeverPos(i)))
+			if (!captive.p_map->IsPortalActive())
 				return false;
 		}
 		return true;
