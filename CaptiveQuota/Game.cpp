@@ -73,12 +73,6 @@ Game::Game()
 	{
 		m_keyMakers.push_back(KeyMaker(&m_map, i));
 	}
-
-
-	m_freeCam = true;
-	m_camPos = m_map.NodeToVector2(m_map.PrisonCellMax());
-	m_camPos.x -= 550;
-	m_camPos.y -= 550;
 }
 
 Game::~Game()
@@ -132,10 +126,6 @@ void Game::Update(float deltaTime)
 	{
 		m_player.Update(deltaTime);
 		m_camPos = m_player.position - v2(WINDOWX / 2, WINDOWY / 2);
-
-		m_camPos = m_captives.begin()->position;
-		m_camPos.x -= WINDOWX / 2;
-		m_camPos.y -= WINDOWY / 2;
 	}
 	else
 	{

@@ -97,8 +97,9 @@
       <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist $(OutDir)Assets\ mkdir $(OutDir)Assets\
-xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
+      <Command>if not exist "$(OutDir)Assets\" mkdir "$(OutDir)Assets\"
+xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"
+copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>rd /s /q "$(TargetDir)"</Command>
@@ -123,8 +124,9 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
       <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist $(OutDir)Assets\ mkdir $(OutDir)Assets\
-xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
+      <Command>if not exist "$(OutDir)Assets\" mkdir "$(OutDir)Assets\"
+xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"
+copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>rd /s /q "$(TargetDir)"</Command>
@@ -146,7 +148,8 @@ xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(OutDir)Assets\" mkdir "$(OutDir)Assets\"
-xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"</Command>
+xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"
+copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>rd /s /q "$(TargetDir)"</Command>
@@ -171,8 +174,9 @@ xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"</Command>
       <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>if not exist $(OutDir)Assets\ mkdir $(OutDir)Assets\
-xcopy /s $(ProjectDir)Assets\* $(OutDir)Assets\</Command>
+      <Command>if not exist "$(OutDir)Assets\" mkdir "$(OutDir)Assets\"
+xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"
+copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>rd /s /q "$(TargetDir)"</Command>
