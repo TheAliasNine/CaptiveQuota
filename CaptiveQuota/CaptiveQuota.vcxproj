@@ -99,7 +99,8 @@
     <PostBuildEvent>
       <Command>if not exist "$(OutDir)Assets\" mkdir "$(OutDir)Assets\"
 xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"
-copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
+copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"
+copy /Y "$(ProjectDir)README.txt" "$(OutDir)README.txt"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>rd /s /q "$(TargetDir)"</Command>
@@ -126,7 +127,8 @@ copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
     <PostBuildEvent>
       <Command>if not exist "$(OutDir)Assets\" mkdir "$(OutDir)Assets\"
 xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"
-copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
+copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"
+copy /Y "$(ProjectDir)README.txt" "$(OutDir)README.txt"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>rd /s /q "$(TargetDir)"</Command>
@@ -149,7 +151,8 @@ copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
     <PostBuildEvent>
       <Command>if not exist "$(OutDir)Assets\" mkdir "$(OutDir)Assets\"
 xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"
-copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
+copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"
+copy /Y "$(ProjectDir)README.txt" "$(OutDir)README.txt"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>rd /s /q "$(TargetDir)"</Command>
@@ -176,7 +179,8 @@ copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
     <PostBuildEvent>
       <Command>if not exist "$(OutDir)Assets\" mkdir "$(OutDir)Assets\"
 xcopy /s "$(ProjectDir)Assets\"* "$(OutDir)Assets\"
-copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"</Command>
+copy /Y "$(ProjectDir)AssetSources.txt" "$(OutDir)AssetSources.txt"
+copy /Y "$(ProjectDir)README.txt" "$(OutDir)README.txt"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>rd /s /q "$(TargetDir)"</Command>

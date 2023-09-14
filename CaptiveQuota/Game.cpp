@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "AABB.h"
+#include "Circle.h"
 #include "MainMenu.h"
 
 #include "InputManager.h"
@@ -35,6 +36,15 @@ Game::Game()
 		intV2 capPosition = intV2();
 		capPosition.x = std::rand() % (m_map.PrisonCellMax().x - m_map.PrisonCellMin().x) + m_map.PrisonCellMin().x;
 		capPosition.y = std::rand() % (m_map.PrisonCellMax().y - m_map.PrisonCellMin().y) + m_map.PrisonCellMin().y;
+		int prevI = i;
+		for (int j = 0; j < i; j++)
+		{
+			if (m_map.Vector2ToNode(m_captives[j].position) != capPosition)
+				continue;
+			i--;
+			break;
+		}
+		if (i != prevI) continue;
 		m_captives.push_back(Captive(m_map.NodeToVector2(capPosition), &m_player, &m_map));
 		m_captives.back().SetAI(&pathFinder, &m_captiveAI, &m_player);
 	}
@@ -325,13 +335,45 @@ void Game::PhysicStep()
 		iter = m_fireballs.erase(iter);
 	}
 
+
+	Circle doorInteractBox = Circle();
+	doorInteractBox.position = m_exitObj.position;
+	doorInteractBox.radius = 0.75f * m_map.CellSize();
+	Circle portalBox = Circle();
+	portalBox.position = m_map.NodeToVector2(m_map.PortalPosition());
+	portalBox.radius = m_portalFrame[0].width / 2 * portalScale;
+
 	for (auto iter = m_captives.begin(); iter != m_captives.end(); iter++)
 	{
-		if (!iter->Alive()) 
+		if (!iter->Alive() || iter->Escaped())
 			continue;
 		CheckMapCollisions(&*iter, true);
-		if (!CheckExplosionCollisions(&*iter, false)) continue;
-		iter->Kill();
+
+		if (m_map.IsPortalActive() && iter->Hitbox()->CheckCollision(&portalBox, nullptr))
+		{
+			iter->Escape();
+			return;
+		}
+
+		if (iter->HaveKey() && iter->Hitbox()->CheckCollision(&doorInteractBox, nullptr))
+		{
+			iter->Escape();
+			m_map.UnlockExit();
+			return;
+		}
+		for (int leverInd = 0; leverInd < m_levers.size(); leverInd++)
+		{
+			if (m_map.IsLeverActive(m_map.LeverPos(leverInd)))
+				continue;
+			v2 obj = m_map.NodeToVector2(m_map.LeverPos(leverInd));
+
+			float distanceSqrd = (obj.x - iter->position.x) * (obj.x - iter->position.x) + (obj.y - iter->position.y) * (obj.y - iter->position.y);
+
+			if (distanceSqrd < Captive::c_interactRange * Captive::c_interactRange)
+				m_levers[leverInd].TurnOn();
+		}
+		if (CheckExplosionCollisions(&*iter, false))
+			iter->Kill();
 	}
 }
 
@@ -423,7 +465,7 @@ bool Game::CheckCaptiveCollisions(HitBoxObject* obj, bool resolve)
 	v2 hitboxOffset = v2();
 	for (auto iter = m_captives.begin(); iter != m_captives.end(); iter++)
 	{
-		if (!iter->Alive()) continue;
+		if (!iter->Alive() || iter->Escaped()) continue;
 		if (resolve)
 		{
 			CollisionInfo info = CollisionInfo();

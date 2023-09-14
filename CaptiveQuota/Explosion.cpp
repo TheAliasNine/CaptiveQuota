@@ -2,7 +2,7 @@
 
 #include "Circle.h"
 
-const float Explosion::liveTime = 1;
+const float Explosion::liveTime = 0.6f;
 const float Explosion::scale = 4;
 
 Explosion::Explosion()

@@ -6,7 +6,7 @@
 class Explore : public Decision<Captive>
 {
 	const int immediateRange = 13;
-	const int nearRange = 30;
+	const int nearRange = 23;
 	float DistanceSquared(intV2 a, intV2 b)
 	{
 		return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
@@ -36,11 +36,11 @@ public:
 				int index = x + y * mapSize.x;
 				if (!captive.m_undiscoveredArea[index])
 					continue;
-				if (DistanceSquared(captive.p_map->Vector2ToNode(captive.position), node) > immediateRange * immediateRange)
+				if (DistanceSquared(captive.p_map->Vector2ToNode(captive.position), node) < immediateRange * immediateRange)
 				{
 					immediateAreas.push_back(node);
 				}
-				else if (DistanceSquared(captive.p_map->Vector2ToNode(captive.position), node) > nearRange * nearRange)
+				else if (DistanceSquared(captive.p_map->Vector2ToNode(captive.position), node) < nearRange * nearRange)
 				{
 					nearAreas.push_back(node);
 				}

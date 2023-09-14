@@ -81,4 +81,6 @@ AStarNode AStarPath::Current()
 void AStarPath::Progress()
 {
 	m_current++;
+	if (m_current >= m_pathLength)
+		m_current = m_pathLength - 1;
 }

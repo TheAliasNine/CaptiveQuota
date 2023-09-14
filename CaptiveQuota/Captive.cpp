@@ -7,8 +7,9 @@
 
 const float Captive::c_scale = 0.5f;
 const float Captive::c_interactRange = 150;
-const float Captive::c_speed = 200;
-const float Captive::c_detectionRange = 15;
+const float Captive::c_speed = 250;
+const float Captive::c_runSpeed = 400;
+const float Captive::c_detectionRange = 7;
 
 Captive::Captive()
 {
@@ -186,15 +187,18 @@ void Captive::Update(float deltaTime)
 
 	v2 posToNode = (p_map->NodeToVector2(m_path.Current().Pos()) - (position + m_hitboxOffset));
 	v2 direction = posToNode.Normalized();
-
-	if (posToNode.Magnitude() < c_speed * deltaTime)
+	float speed = m_running ? c_runSpeed : c_speed;
+	if (posToNode.Magnitude() < speed * deltaTime)
 	{
 		position = p_map->NodeToVector2(m_path.Current().Pos()) - m_hitboxOffset;
 		if (m_path.Current().Pos() == m_path.Goal())
+		{
 			m_running = false;
+			m_path = AStarPath();
+		}
 	}
 	else
-		position = position + (c_speed * deltaTime * direction);
+		position = position + (speed * deltaTime * direction);
 	m_hitbox->position = position + m_hitboxOffset;
 
 	CheckPOIs();
@@ -229,20 +233,10 @@ void Captive::Draw(v2 camPos)
 			return;
 		DrawTextureEx(m_txtrDead, drawPos, 0, c_scale, WHITE);
 	}
-
 }
 
 void Captive::CheckPOIs()
 {
-	for (int i = 0; i < p_map->LeverCount(); i++)
-	{
-		v2 obj = p_map->NodeToVector2(p_map->LeverPos(i));
-
-		float distanceSqrd = (obj.x - position.x) * (obj.x - position.x) + (obj.y - position.y) * (obj.y - position.y);
-
-		if (distanceSqrd < c_interactRange * c_interactRange)
-			p_map->ActivateLever(p_map->LeverPos(i));
-	}
 	if (!m_haveKey)
 	{
 		for (int i = 0; i < p_map->KeyMakerCount(); i++)
@@ -360,16 +354,16 @@ void Captive::DiscoverTile(intV2 tile)
 		switch (i)
 		{
 		case 0:
-			tile.x++;
+			neighbour.x++;
 			break;
 		case 1:
-			tile.x--;
+			neighbour.x--;
 			break;
 		case 2:
-			tile.y++;
+			neighbour.y++;
 			break;
 		case 3:
-			tile.y--;
+			neighbour.y--;
 			break;
 		}
 

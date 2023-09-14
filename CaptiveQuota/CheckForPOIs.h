@@ -17,6 +17,7 @@ protected:
 			if (map->CheckLineOfSight(captive.position, map->NodeToVector2(map->PortalPosition()), captive.c_detectionRange * captive.p_map->CellSize()))
 				return true;
 		}
+
 		if (!captive.HaveKey())
 		{
 			for (int i = 0; i < map->KeyMakerCount(); i++)

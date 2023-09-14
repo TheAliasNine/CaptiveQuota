@@ -15,7 +15,6 @@ class CaptivePathGoalFinding;
 class Captive : public HitBoxObject
 {
 	static const float c_scale;
-	static const float c_interactRange;
 
 	v2 m_hitboxOffset;
 
@@ -30,9 +29,11 @@ class Captive : public HitBoxObject
 	void DiscoverTile(intV2 tile);
 
 	static const float c_speed;
+	static const float c_runSpeed;
 
 public:
 	static const float c_detectionRange;
+	static const float c_interactRange;
 	Player* p_player;
 	Map* p_map;
 	intV2 m_goal = intV2();
